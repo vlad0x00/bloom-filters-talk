@@ -1,0 +1,21 @@
+---
+title: "Bloom Filters"
+subtitle: "Vancouver Systems"
+author: "Vlad"
+---
+
+## False-positive rate vs. memory
+
+![](figures/out/fp_rate.svg){fig-align="center"}
+
+::: {.notes}
+Placeholder slide to check the static-figure pipeline.
+:::
+
+## Inserting into a Bloom filter
+
+{{< video figures/out/insert.mp4 width="1400" >}}
+
+::: {.notes}
+Placeholder slide to check the animation pipeline.
+:::

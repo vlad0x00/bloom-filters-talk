@@ -1,0 +1,12 @@
+[project]
+name = "bloom-filters-talk"
+version = "0.1.0"
+description = "Figures and animations for the Bloom filters talk at Vancouver Systems"
+requires-python = ">=3.12"
+dependencies = [
+    "matplotlib>=3.9",
+    "numpy>=2.0",
+]
+
+[tool.uv]
+package = false

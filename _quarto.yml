@@ -1,0 +1,22 @@
+project:
+  type: default
+  output-dir: _site
+  render:
+    - index.qmd
+  resources:
+    - figures/out/
+
+format:
+  revealjs:
+    theme: [default, style.scss]
+    slide-number: c/t
+    width: 1600
+    height: 900
+    margin: 0.06
+    html-math-method: katex
+    code-line-numbers: false
+    hash-type: number
+    transition: none
+    preview-links: false
+    chalkboard: false
+    pdf-separate-fragments: false

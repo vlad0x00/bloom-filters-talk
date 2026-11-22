@@ -1,0 +1,15 @@
+/*-- scss:defaults --*/
+$presentation-font-size-root: 36px;
+$body-color: #1d1d1f;
+$link-color: #2a6fdb;
+$presentation-heading-font-weight: 600;
+
+/*-- scss:rules --*/
+.reveal video,
+.reveal img {
+  max-height: 70vh;
+}
+
+.reveal .small {
+  font-size: 0.7em;
+}
