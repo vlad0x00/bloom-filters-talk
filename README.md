@@ -6,7 +6,6 @@ Slides for a ~30-minute talk on Bloom filters and their variants at [Vancouver S
 
 - **Slides:** [Quarto](https://quarto.org) → reveal.js (HTML). Content lives in `index.qmd` (Markdown, KaTeX math, speaker notes).
 - **Figures and animations:** Python scripts in `figures/`, run with [uv](https://docs.astral.sh/uv/). Static plots are SVG; animations are MP4 (matplotlib + ffmpeg). Output goes to `figures/out/` (not committed).
-- **Publishing:** GitHub Actions renders the deck and deploys it to GitHub Pages on every push to `main`.
 
 ## Requirements
 
