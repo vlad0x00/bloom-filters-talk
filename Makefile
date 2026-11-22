@@ -13,10 +13,10 @@ figures/out/.%.stamp: figures/%.py figures/style.py
 	@touch $@
 
 slides: figures
-	quarto render
+	uv run quarto render
 
 preview: figures
-	quarto preview
+	uv run quarto preview
 
 # Needs Chromium; prints the deck via reveal.js print mode.
 pdf: slides

@@ -4,12 +4,12 @@ Slides for a ~30-minute talk on Bloom filters and their variants at [Vancouver S
 
 ## Stack
 
-- **Slides:** [Quarto](https://quarto.org) → reveal.js (HTML). Content lives in `index.qmd` (Markdown, KaTeX math, speaker notes).
+- **Slides:** [Quarto](https://quarto.org) → reveal.js (HTML). Quarto is a project dev dependency (`quarto-cli` in `pyproject.toml`), run via `uv run quarto`. Content lives in `index.qmd` (Markdown, KaTeX math, speaker notes).
 - **Figures and animations:** Python scripts in `figures/`, run with [uv](https://docs.astral.sh/uv/). Static plots are SVG; animations are MP4 (matplotlib + ffmpeg). Output goes to `figures/out/` (not committed).
 
 ## Requirements
 
-`uv`, `quarto`, `ffmpeg`, `make`. For PDF export: Node.js (uses `decktape`).
+`uv`, `ffmpeg`, `make`. uv installs everything else (including Quarto) into `.venv` on first run. For PDF export: Node.js (uses `decktape`).
 
 ## Usage
 
