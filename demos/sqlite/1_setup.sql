@@ -14,5 +14,3 @@ insert into orders(customer_id)
 
 insert into customers
   select value * 1000, 'customer ' || value from generate_series(1, 100);
-
-analyze;
