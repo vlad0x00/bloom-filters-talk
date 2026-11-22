@@ -15,11 +15,16 @@ FPS = 30
 
 
 def positions(item: str) -> list[int]:
-    """k independent hash functions: SHA-256 seeded with the function index."""
-    return [
-        int.from_bytes(hashlib.sha256(f"{i}:{item}".encode()).digest()[:8], "little") % M
-        for i in range(K)
-    ]
+    """k hash functions (SHA-256 seeded with an index). For a clearer picture,
+    skip seeds that land on a position already chosen for this item."""
+    result: list[int] = []
+    seed = 0
+    while len(result) < K:
+        h = int.from_bytes(hashlib.sha256(f"{seed}:{item}".encode()).digest()[:8], "little") % M
+        if h not in result:
+            result.append(h)
+        seed += 1
+    return result
 
 
 fig, ax = plt.subplots(figsize=(16, 4))

@@ -14,7 +14,7 @@ Placeholder slide to check the static-figure pipeline.
 
 ## Inserting into a Bloom filter
 
-{{< video figures/out/insert.mp4 width="1400" >}}
+<video data-autoplay muted playsinline src="figures/out/insert.mp4" style="width: 100%;"></video>
 
 ::: {.notes}
 Placeholder slide to check the animation pipeline.
