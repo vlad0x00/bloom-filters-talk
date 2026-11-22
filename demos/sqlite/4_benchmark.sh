@@ -6,7 +6,7 @@ cd "$(dirname "$0")"
 
 QUERY="select count(*) from orders join customers on orders.customer_id = customers.id;"
 
-hyperfine --shell=none --warmup 3 --runs 20 \
+hyperfine --shell=none --warmup 3 --runs 10 \
   --command-name "with Bloom filter" \
   "sqlite3 demo.db '$QUERY'" \
   --command-name "without Bloom filter" \

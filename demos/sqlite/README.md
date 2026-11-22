@@ -12,7 +12,7 @@ From this directory:
 sqlite3 demo.db < 1_setup.sql          # once: creates demo.db (~240 MB, ~2 s)
 sqlite3 demo.db < 2_with_bloom.sql     # join with the Bloom filter
 sqlite3 demo.db < 3_without_bloom.sql  # same join, Bloom filter turned off
-./4_benchmark.sh                       # 20 runs of each, with statistics
+./4_benchmark.sh                       # 10 runs of each, with statistics
 ```
 
 ## What to look for
@@ -31,10 +31,10 @@ Both return the same count (19800). Of the 20M orders, 99.9% have no matching cu
 ## Benchmark (example output)
 
 ```
-with Bloom filter:     605.8 ms ±  38.7 ms   (range 562.6 ms … 698.3 ms, 20 runs)
-without Bloom filter:  1.335 s  ±  0.052 s   (range 1.285 s  … 1.431 s,  20 runs)
+with Bloom filter:     583.6 ms ±  6.1 ms    (range 572.7 ms … 591.9 ms, 10 runs)
+without Bloom filter:  1.291 s  ±  0.044 s   (range 1.250 s  … 1.386 s,  10 runs)
 
-with Bloom filter ran 2.20 ± 0.16 times faster
+with Bloom filter ran 2.21 ± 0.08 times faster
 ```
 
 The ranges don't overlap: the slowest run with the filter is faster than the fastest run without it.
