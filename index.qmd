@@ -146,3 +146,9 @@ statistics:{"filter_not_present":0,"maybe":9,
 ::: {.peek}
 {{< include figures/out/inside_stack.md >}}
 :::
+
+## Multiple hash functions {.inside background-color="#1d1d1f"}
+
+::: {.peek}
+{{< include figures/out/multihash_stack.md >}}
+:::
