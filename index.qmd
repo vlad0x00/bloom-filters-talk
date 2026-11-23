@@ -40,5 +40,5 @@ pagetitle: "Bloom Filters"
 ::: {.notes}
 - Hash function choice doesn't matter too much. Faster is better. Secure is unnecessary
 - Because we hash elements, their size inside the Bloom filter is unrelated to their original size
-- We can't read elements in the filter. We can only test their presence when we have the element
+- We can't retrieve elements from the filter. We can only test their presence when we have the element
 :::
