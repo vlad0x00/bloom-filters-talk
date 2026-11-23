@@ -116,14 +116,14 @@ Summary
 <pre class="terminal small-term"><span class="prompt">$</span> git commit-graph write --reachable --changed-paths
 
 <span class="prompt">$</span> git log --oneline -- README.md
-344f676 Update README
-53aa406 Add README
+5509d4a Update README
+1a2a47d Add README
 
 <span class="prompt">$</span> GIT_TRACE2_PERF=1 git log --oneline -- README.md 2&gt;&amp;1 \
     | grep -o 'statistics.*'
-statistics:{"filter_not_present":0,"maybe":8,
-            <span class="hl">"definitely_not":991</span>,<span class="hl">"false_positive":7</span>}</pre>
-<p class="caption-small">991 of 1000 commits skipped without a diff</p>
+statistics:{"filter_not_present":0,"maybe":9,
+            <span class="hl">"definitely_not":990</span>,<span class="hl">"false_positive":7</span>}</pre>
+<p class="caption-small">990 of 1000 commits skipped without a diff</p>
 ```
 :::
 ::::
