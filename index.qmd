@@ -147,8 +147,16 @@ statistics:{"filter_not_present":0,"maybe":9,
 {{< include figures/out/inside_stack.md >}}
 :::
 
+::: {.fp-rate .fragment}
+False-positive rate: 1/16 = **6.25%**
+:::
+
 ## Multiple hash functions {.inside background-color="#1d1d1f"}
 
 ::: {.peek}
 {{< include figures/out/multihash_stack.md >}}
+:::
+
+::: {.fp-rate .fragment}
+False-positive rate: (3/16)³ ≈ **0.66%** <span class="was">(was 1/16 = 6.25% with one hash)</span>
 :::

@@ -100,3 +100,19 @@ $presentation-heading-font-weight: 600;
   padding: 18px 24px;
   margin-top: 10px;
 }
+
+/* False-positive rate line under the "inside" panels (on the dark wall). */
+.reveal .fp-rate {
+  color: #f5f5f7;
+  font-size: 1.0em;
+  text-align: center;
+  margin-top: 18px;
+}
+.reveal .fp-rate strong {
+  color: #f0a35e;
+}
+.reveal .fp-rate .was {
+  color: #a1a1a6;
+  font-size: 0.8em;
+  margin-left: 12px;
+}
