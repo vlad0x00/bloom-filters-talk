@@ -206,7 +206,7 @@ Derivation (n elements, m bits, k hashes):
 <div class="fragment" data-fragment-index="5">
 <table class="vs">
 <tr><th>Counting Bloom filter</th><th>Count-min sketch</th></tr>
-<tr><td>how <b>often</b> the count is wrong</td><td class="cms">how <b>much</b> it can be wrong<br><span class="eg">e.g. 99% of queries are off by at most 0.1% of all insertions</span></td></tr>
+<tr><td>how <b>often</b> the count is wrong</td><td class="cms">how <b>often</b> and how <b>much</b> it can be wrong<br><span class="eg">e.g. 99% of queries are off by at most 0.1% of all insertions</span></td></tr>
 </table>
 </div>
 ```
