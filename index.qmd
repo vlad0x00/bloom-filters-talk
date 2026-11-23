@@ -131,3 +131,11 @@ statistics:{"filter_not_present":0,"maybe":9,
 ## Genome assembly: extending a sequence
 
 {{< include figures/out/assembly_stack.md >}}
+
+## False positives during assembly
+
+![](figures/out/fp_branches.svg){width="100%"}
+
+- A false positive lets the assembler step off the real sequence
+- The next k-mers on that branch aren't in the reads either → it dies after a few bases
+- Short dead-end branches are simply ignored
