@@ -61,4 +61,5 @@ pagetitle: "Bloom Filters"
 ::: {.notes}
 - They're often used to avoid a costly action
 - Generally when you're dealing with lots of data and/or statistical algorithms
+- They can also be used in memory-restricted/embedded systems, e.g. network hardware or CPU caches
 :::
