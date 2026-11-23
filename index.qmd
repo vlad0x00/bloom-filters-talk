@@ -212,5 +212,7 @@ Derivation (n elements, m bits, k hashes):
 ```
 
 ::: {.notes}
-- Rows are independent → unlikely that all rows are bad at once
+- A row's noise averages N / columns
+- Rows are independent → all bad: (chance one row is bad)^rows
+- More columns → smaller error; more rows → more confidence
 :::
