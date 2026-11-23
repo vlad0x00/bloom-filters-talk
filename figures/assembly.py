@@ -74,11 +74,12 @@ click_contig = [ax.text(CX - 0.012, CY + 0.075, "extend this sequence", ha="left
 click_contig += seq(CX, CY, CONTIG)
 edge_x = CX + (len(CONTIG) - (K - 1)) * CW
 click_contig.append(ax.add_patch(FancyBboxPatch(
-    (edge_x - CW * 0.38, CY - 0.035), (K - 1) * CW - CW * 0.24, 0.07,
-    boxstyle="round,pad=0.002,rounding_size=0.008", fc="none", ec=ORANGE, lw=2)))
+    (edge_x - CW * 0.5, CY - 0.035), (K - 1) * CW, 0.07,
+    boxstyle="round,pad=0.002,rounding_size=0.008", fc=ORANGE, ec="none", alpha=0.22,
+    zorder=0)))
 qmark_x = CX + len(CONTIG) * CW
-question = [ax.text(qmark_x, CY, "?", ha="center", va="center", fontsize=21, family=MONO,
-                    color=ORANGE, fontweight="bold")]
+click_contig.append(ax.text(qmark_x, CY, "?", ha="center", va="center", fontsize=21, family=MONO,
+                            color=ORANGE, fontweight="bold"))
 
 # --- Click 3: try all four bases -----------------------------------------------------
 cand_y = [0.62, 0.51, 0.40, 0.29]
@@ -100,40 +101,36 @@ for b, y in zip("ACGT", cand_y):
                                  fontweight="bold" if hit else "normal"))
 
 # --- Click 5: extend with the hit ----------------------------------------------------
-click_extend = seq(qmark_x, CY, NEXT, color=BLUE, weight="bold")
+# Cover the old "?" with a blank cell (layers only add), then draw the new base.
+click_extend = [ax.add_patch(plt.Rectangle((qmark_x - CW * 0.4, CY - 0.03), CW * 0.8, 0.06, fc="white",
+                                           ec="none", zorder=1))]
+click_extend += seq(qmark_x, CY, NEXT, color=BLUE, weight="bold")
 click_extend += seq(qmark_x + CW, CY, "?", color=ORANGE, weight="bold")
 
-# Layers in click order. The "?" appears with click 2 and fades out on click 5.
+# Layers in click order: base, then one per right-arrow press.
 layers = [
-    ("layer_00.svg", static, None),
-    ("layer_01.svg", click_reads, "fragment"),
-    ("layer_02.svg", click_contig, "fragment"),
-    ("layer_02q.svg", question, "fragment fade-out"),
-    ("layer_03.svg", click_try, "fragment"),
-    ("layer_04.svg", click_answers, "fragment"),
-    ("layer_05.svg", click_extend, "fragment"),
+    ("layer_00.svg", static),
+    ("layer_01.svg", click_reads),
+    ("layer_02.svg", click_contig),
+    ("layer_03.svg", click_try),
+    ("layer_04.svg", click_answers),
+    ("layer_05.svg", click_extend),
 ]
-# reveal.js fragment index per layer: "?" shows with click 2 (index 1) and fades at click 5.
-index = {"layer_01.svg": 0, "layer_02.svg": 1, "layer_03.svg": 2, "layer_04.svg": 3,
-         "layer_05.svg": 4}
 
-everything = [a for _, arts, _ in layers for a in arts]
+everything = [a for _, arts in layers for a in arts]
+for t in click_extend[1:]:
+    t.set_zorder(2)
 LAYERS.mkdir(exist_ok=True)
+for old in LAYERS.glob("*.svg"):
+    old.unlink()
 imgs = []
-for name, arts, cls in layers:
+for n, (name, arts) in enumerate(layers):
     keep = set(map(id, arts))
     for a in everything:
         a.set_visible(id(a) in keep)
     fig.savefig(LAYERS / name, transparent=True, bbox_inches=None)
-    src = f"figures/out/assembly/{name}"
-    if cls is None:
-        imgs.append(f'<img src="{src}">')
-    elif name == "layer_02q.svg":
-        # Visible from click 2 (index 1) until click 5 (index 4).
-        imgs.append(f'<span class="fragment" data-fragment-index="1">'
-                    f'<img class="fragment fade-out" data-fragment-index="4" src="{src}"></span>')
-    else:
-        imgs.append(f'<img class="{cls}" data-fragment-index="{index[name]}" src="{src}">')
+    cls = "" if n == 0 else ' class="fragment"'
+    imgs.append(f'<img{cls} src="figures/out/assembly/{name}">')
 
 (OUT / "assembly_stack.md").write_text(
     '```{=html}\n<div class="r-stack">\n' + "\n".join(imgs) + "\n</div>\n```\n"
