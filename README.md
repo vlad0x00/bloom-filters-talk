@@ -26,3 +26,8 @@ Presenter view: press `S` in the browser. Open the deck over HTTP (`make serve` 
 ## Adding a figure
 
 Create `figures/<name>.py` that writes to `OUT / "<name>.svg"` (for animations, call `save_animation(anim, "<name>", fps)`), importing paths and style from `figures/style.py`. Reference it in `index.qmd` as `figures/out/<name>.svg` or `<video data-autoplay muted playsinline src="figures/out/<name>.webm"></video>`.
+
+## Click-through figures
+
+For a figure that builds up on each right-arrow press, write one transparent SVG per step and stack them as reveal.js fragments. See `figures/blackbox.py`: it saves `figures/out/blackbox/layer_NN.svg` and writes `figures/out/blackbox_stack.md`, which `index.qmd` pulls in with `{{< include figures/out/blackbox_stack.md >}}`. Which elements appear on which click is set by `CLICKS` in the script.
+

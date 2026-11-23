@@ -1,23 +1,25 @@
-"""Animation: a Bloom filter as a black box.
+"""Slide: a Bloom filter as a black box, revealed step by step.
 
 Left: examples of things that can go in (anything hashable).
-Right, step by step: insert "cat" (string -> hash number -> box), query "dog"
-("definitely not"), then query "kitty" ("possibly yes": a false positive).
+Right: insert "cat" (string -> hash number -> box), query "dog" ("definitely
+not"), then query "kitty" ("possibly yes": a false positive).
+
+Output: one transparent SVG per layer (base + one per click), plus an HTML
+snippet that stacks them as reveal.js fragments. Each right-arrow press on the
+slide reveals the next layer.
 """
 
 import hashlib
 
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
 from matplotlib.patches import FancyBboxPatch
 
-from style import save_animation, BLUE, GREY, INK, ORANGE
+from style import BLUE, GREY, INK, ORANGE, OUT
 
-FPS = 30
-STEP = 22          # frames per reveal step
-FADE = 10          # frames to fade a step in
-HOLD = 3 * FPS     # hold the final frame
+# Glyphs as paths, so the slide doesn't depend on fonts installed on the laptop.
+plt.rcParams["svg.fonttype"] = "path"
 MONO = "DejaVu Sans Mono"
+LAYERS = OUT / "blackbox"
 
 EXAMPLES = [
     ('"GATTACA"', "a DNA sequence"),
@@ -94,6 +96,7 @@ def row(y, verb, word, color, answer=None, note=None):
 
 
 PURPLE = "#8a3fd1"
+static = list(ax.texts) + list(ax.patches) + list(ax.lines)
 steps = (
     row(0.72, "insert", '"cat"', BLUE)
     + row(0.48, "query", '"dog"', ORANGE, answer="definitely not")
@@ -101,23 +104,42 @@ steps = (
 )
 
 
-def set_alpha(artist, a):
-    if getattr(artist, "arrow_patch", None) is not None:
-        artist.arrow_patch.set_alpha(a)
-    artist.set_alpha(a)
-    if hasattr(artist, "get_bbox_patch") and artist.get_bbox_patch() is not None:
-        artist.get_bbox_patch().set_alpha(a)
+# Which reveal steps appear together on each click. Indices into `steps`:
+#   cat:   0 word, 1 hash, 2 number, 3 into box
+#   dog:   4 word, 5 hash, 6 number, 7 into box, 8 out arrow, 9 answer
+#   kitty: 10 word, 11 hash, 12 number, 13 into box, 14 out arrow, 15 answer, 16 note
+CLICKS = [
+    [0],
+    [1, 2, 3],
+    [4],
+    [5, 6, 7],
+    [8, 9],
+    [10],
+    [11, 12, 13],
+    [14, 15, 16],
+]
+assert sorted(i for c in CLICKS for i in c) == list(range(len(steps)))
 
 
-def update(frame: int):
-    current, f = divmod(frame, STEP)
-    for i, group in enumerate(steps):
-        a = 1.0 if i < current else (min(1.0, f / FADE) if i == current else 0.0)
-        for artist in group:
-            set_alpha(artist, a)
-    return []
+def show_only(artists):
+    keep = set(map(id, artists))
+    for a in static + [x for group in steps for x in group]:
+        a.set_visible(id(a) in keep)
 
 
-update(0)
-anim = FuncAnimation(fig, update, frames=len(steps) * STEP + HOLD, interval=1000 / FPS)
-save_animation(anim, "blackbox_insert", FPS)
+LAYERS.mkdir(exist_ok=True)
+names = []
+layers = [static] + [[a for i in click for a in steps[i]] for click in CLICKS]
+for n, artists in enumerate(layers):
+    show_only(artists)
+    name = f"layer_{n:02d}.svg"
+    # No tight bbox: every layer must have exactly the same canvas to stack correctly.
+    fig.savefig(LAYERS / name, transparent=True, bbox_inches=None)
+    names.append(name)
+
+# reveal.js r-stack: base layer always shown, the rest are fragments (one per click).
+imgs = [f'<img src="figures/out/blackbox/{names[0]}">']
+imgs += [f'<img class="fragment" src="figures/out/blackbox/{n}">' for n in names[1:]]
+(OUT / "blackbox_stack.md").write_text(
+    '```{=html}\n<div class="r-stack">\n' + "\n".join(imgs) + "\n</div>\n```\n"
+)

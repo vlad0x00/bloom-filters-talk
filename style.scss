@@ -19,3 +19,9 @@ $presentation-heading-font-weight: 600;
 .reveal .slides section.hide-title > h2 {
   display: none;
 }
+
+/* Click-through figure stacks (r-stack) use the full slide width. */
+.reveal .r-stack img {
+  width: 100%;
+  max-height: none;
+}

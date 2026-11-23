@@ -35,24 +35,8 @@ pagetitle: "Bloom Filters"
 
 ## Example: inserting elements {.hide-title .center}
 
-<video data-autoplay muted playsinline src="figures/out/blackbox_insert.webm" style="width: 100%;"></video>
+{{< include figures/out/blackbox_stack.md >}}
 
 ::: {.notes}
 - Hash function choice doesn't matter too much. Faster is better. Secure is unnecessary
-:::
-
-## False-positive rate vs. memory
-
-![](figures/out/fp_rate.svg){fig-align="center"}
-
-::: {.notes}
-Placeholder slide to check the static-figure pipeline.
-:::
-
-## Inserting into a Bloom filter
-
-<video data-autoplay muted playsinline src="figures/out/insert.webm" style="width: 100%;"></video>
-
-::: {.notes}
-Placeholder slide to check the animation pipeline.
 :::
