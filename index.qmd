@@ -287,3 +287,5 @@ Derivation (n elements, m bits, k hashes):
 ::: {.notes}
 - List is Claude-generated
 :::
+
+## Q&A {.center .section-slide}
