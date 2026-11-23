@@ -5,6 +5,7 @@ project:
     - index.qmd
   resources:
     - figures/out/
+    - figures/static/
 
 format:
   revealjs:
