@@ -65,3 +65,37 @@ pagetitle: "Bloom Filters"
 :::
 
 ## SQLite demo {.center .section-slide}
+
+## SQLite demo: results
+
+```{=html}
+<div class="terminals">
+<pre class="terminal"><span class="prompt">$</span> sqlite3 demo.db &lt; 2_with_bloom.sql
+QUERY PLAN
+|--SCAN orders
+<span class="hl">|--BLOOM FILTER ON customers (id=?)</span>
+`--SEARCH customers USING AUTOMATIC COVERING INDEX (id=?)
+Run Time: real 0.000 user 0.000145 sys 0.000000
+19800
+Run Time: <span class="hl">real 0.583</span> user 0.535573 sys 0.043698</pre>
+<pre class="terminal"><span class="prompt">$</span> sqlite3 demo.db &lt; 3_without_bloom.sql
+QUERY PLAN
+|--SCAN orders
+`--SEARCH customers USING AUTOMATIC COVERING INDEX (id=?)
+Run Time: real 0.000 user 0.000149 sys 0.000000
+19800
+Run Time: <span class="hl">real 1.295</span> user 1.252679 sys 0.036012</pre>
+</div>
+<pre class="terminal wide"><span class="prompt">$</span> ./4_benchmark.sh
+Benchmark 1: with Bloom filter
+  Time (mean ± σ):     601.1 ms ±  26.0 ms    [User: 560.6 ms, System: 39.2 ms]
+  Range (min … max):   574.1 ms … 649.8 ms    10 runs
+
+Benchmark 2: without Bloom filter
+  Time (mean ± σ):      1.364 s ±  0.084 s    [User: 1.313 s, System: 0.049 s]
+  Range (min … max):    1.281 s …  1.527 s    10 runs
+
+Summary
+  with Bloom filter ran
+    <span class="hl">2.27 ± 0.17 times faster</span> than without Bloom filter</pre>
+```

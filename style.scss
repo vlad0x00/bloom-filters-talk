@@ -54,3 +54,26 @@ $presentation-heading-font-weight: 600;
   text-align: center;
   font-size: 2.4em;
 }
+
+/* Terminal-style output panels (backup demo slide). */
+.reveal .terminals {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.reveal pre.terminal {
+  background: #1e1e1e;
+  color: #e6e6e6;
+  font-family: "DejaVu Sans Mono", "Menlo", "Consolas", monospace;
+  font-size: 0.48em;
+  line-height: 1.4;
+  padding: 18px 22px;
+  border-radius: 10px;
+  box-shadow: none;
+  margin: 0 0 22px 0;
+  white-space: pre;
+  overflow: hidden;
+  width: auto;
+}
+.reveal pre.terminal .prompt { color: #7ee787; }
+.reveal pre.terminal .hl { color: #f0a35e; font-weight: bold; }
