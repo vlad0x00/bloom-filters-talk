@@ -11,7 +11,7 @@ pagetitle: "Bloom Filters"
 
 ::: {.notes}
 - Worked in scientific computing most of my career (almost a decade)
-- Right now working in bot detection
+- Right now working in bot detection. Fun fact
 - Have used Bloom filters in many projects
 :::
 
@@ -25,6 +25,17 @@ pagetitle: "Bloom Filters"
 - Trades a small error rate for significantly less memory usage
 :::
 ::::
+
+::: {.notes}
+- How many people know or have used Bloom filter(s)?
+- The original paper:
+  - Bloom worked at Computer Usage Company in Massachusetts. The paper is about hash coding when memory is too small to hold the data.
+  - He analyzed three competing factors: hash area size (space), time to reject a non-member ("reject time"), and an allowable error rate.
+  - The target: applications where most of the tested items are *not* in the set, so the fast "no" matters most.
+  - The idea: accept a small fraction of false "yes" answers ("errors of commission") to fit the hash area in core memory, and catch those errors with a slower secondary check.
+  - His example: automatic hyphenation of a 500,000-word dictionary. 90% of words follow simple rules; 10% need a disk lookup. The in-memory filter holds those 10%.
+  - Result: a hash area 18% of the size of an error-free one still eliminates 87% of the disk accesses.
+:::
 
 ## {.no-title .center}
 
