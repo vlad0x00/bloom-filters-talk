@@ -88,3 +88,8 @@ $presentation-heading-font-weight: 600;
   color: #6e6e73;
   margin-top: 0;
 }
+/* A wrapper span inside an r-stack must stack like the images do. */
+.reveal .r-stack > span {
+  grid-area: 1 / 1;
+  display: block;
+}

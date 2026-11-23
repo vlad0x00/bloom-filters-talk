@@ -127,3 +127,7 @@ statistics:{"filter_not_present":0,"maybe":8,
 ```
 :::
 ::::
+
+## Genome assembly: extending a sequence
+
+{{< include figures/out/assembly_stack.md >}}
