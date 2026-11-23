@@ -216,4 +216,5 @@ Derivation (n elements, m bits, k hashes):
 - Row within tolerance = its noise ≤ the allowed error
 - Rows are independent → none within tolerance: (chance one row isn't)^rows
 - More columns → smaller error; more rows → more confidence
+- Because of row separation, error is slightly greater than that of a counting bloom filter with the same memory budget
 :::
