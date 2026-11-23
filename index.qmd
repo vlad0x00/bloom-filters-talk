@@ -204,11 +204,8 @@ Derivation (n elements, m bits, k hashes):
 
 ```{=html}
 <table class="vs fragment" data-fragment-index="5">
-<tr><th></th><th>Counting Bloom filter</th><th>Count-min sketch</th></tr>
-<tr><td>Hashes</td><td>share one array</td><td class="cms">one row each</td></tr>
-<tr><td>Counters</td><td>4 bits (max 15)</td><td class="cms">32 or 64 bits</td></tr>
-<tr><td>Sized by</td><td>number of items <i>n</i></td><td class="cms">error <i>ε</i>, confidence <i>δ</i>: &nbsp;<i>w</i> = ⌈e/<i>ε</i>⌉, <i>d</i> = ⌈ln 1/<i>δ</i>⌉</td></tr>
-<tr><td>Guarantee</td><td>how <b>often</b> it's wrong (≈ FP rate)</td><td class="cms">how <b>much</b>: count ≤ estimate ≤ count + <i>εN</i>, with prob. ≥ 1 − <i>δ</i></td></tr>
+<tr><th>Counting Bloom filter</th><th>Count-min sketch</th></tr>
+<tr><td>how <b>often</b> the count is wrong (≈ FP rate)</td><td class="cms">how <b>much</b> it's wrong: count ≤ estimate ≤ count + <i>εN</i>, with prob. ≥ 1 − <i>δ</i></td></tr>
 </table>
 ```
 
