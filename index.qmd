@@ -158,7 +158,6 @@ False-positive rate: 1/16 = **6.25%**
 
 ::: {.notes}
 - A possibly huge element reduced to 1 bit. E.g. a 100 bit element achieves 100x mem usage reduction.
-- Bad cache locality: k hashes = k cache misses. Fix: blocked Bloom filter (1 cache line)
 :::
 
 ## Multiple hash functions {.inside background-color="#1d1d1f"}
@@ -173,6 +172,7 @@ False-positive rate: (3/16)³ ≈ **0.66%** <span class="was">(was 1/16 = 6.25% 
 
 ::: {.notes}
 - There's a trade-off: more hashes = more tests, but also more bit pollution
+- Bad cache locality: k hashes = k cache misses. Fix: blocked Bloom filter (1 cache line)
 :::
 
 ## How many hash functions?
