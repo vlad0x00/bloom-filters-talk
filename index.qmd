@@ -160,3 +160,7 @@ False-positive rate: 1/16 = **6.25%**
 ::: {.fp-rate .fragment}
 False-positive rate: (3/16)³ ≈ **0.66%** <span class="was">(was 1/16 = 6.25% with one hash)</span>
 :::
+
+::: {.notes}
+- There's a trade-off: more hashes = more tests, but also more bit pollution
+:::
