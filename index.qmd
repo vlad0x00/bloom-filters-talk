@@ -213,7 +213,6 @@ Derivation (n elements, m bits, k hashes):
 
 ::: {.notes}
 - Like a counting Bloom filter, but each hash gets its own row
-- Collisions only add → min never undercounts
 - Why the bound:
   - A row's noise averages N / w
   - Noise > ~3× average in ≤ 37% of rows
