@@ -218,3 +218,68 @@ Derivation (n elements, m bits, k hashes):
 - More columns → smaller error; more rows → more confidence
 - Because of row separation, the error is slightly greater than that of a counting bloom filter with the same memory budget
 :::
+
+## Bloom filter variants and relatives
+
+```{=html}
+<ul class="variants">
+<li>Counting Bloom filter</li>
+<li>Count-min sketch</li>
+<li>Spectral Bloom filter</li>
+<li>d-left counting Bloom filter</li>
+<li>Variable-increment counting Bloom filter</li>
+<li>Deletable Bloom filter</li>
+<li>Retouched Bloom filter</li>
+<li>Generalized Bloom filter</li>
+<li>Compressed Bloom filter</li>
+<li>Partitioned Bloom filter</li>
+<li>Blocked Bloom filter</li>
+<li>Split block Bloom filter</li>
+<li>Register-blocked Bloom filter</li>
+<li>Sectorized Bloom filter</li>
+<li>Scalable Bloom filter</li>
+<li>Dynamic Bloom filter</li>
+<li>Stable Bloom filter</li>
+<li>Time-decaying Bloom filter</li>
+<li>Age-partitioned Bloom filter</li>
+<li>Forgetful Bloom filter</li>
+<li>Sliding-window Bloom filter</li>
+<li>Weighted Bloom filter</li>
+<li>Attenuated Bloom filter</li>
+<li>Hierarchical Bloom filter</li>
+<li>Space-code Bloom filter</li>
+<li>Spatial Bloom filter</li>
+<li>Shifting Bloom filter</li>
+<li>Bloomier filter</li>
+<li>Invertible Bloom filter</li>
+<li>Invertible Bloom lookup table</li>
+<li>Garbled Bloom filter</li>
+<li>CRLite filter cascade</li>
+<li>Cascading Bloom filter</li>
+<li>Multi-index Bloom filter</li>
+<li>Sequence Bloom tree</li>
+<li>BitFunnel</li>
+<li>Learned Bloom filter</li>
+<li>Sandwiched learned Bloom filter</li>
+<li>Partitioned learned Bloom filter</li>
+<li>Neural Bloom filter</li>
+<li>Quotient filter</li>
+<li>Counting quotient filter</li>
+<li>Cuckoo filter</li>
+<li>Adaptive cuckoo filter</li>
+<li>Morton filter</li>
+<li>Vacuum filter</li>
+<li>XOR filter</li>
+<li>Binary fuse filter</li>
+<li>Ribbon filter</li>
+<li>Prefix filter</li>
+<li>Taffy filter</li>
+<li>InfiniFilter</li>
+<li>Aleph filter</li>
+<li>Broom filter</li>
+<li>Telescoping adaptive filter</li>
+<li>SuRF</li>
+<li>Rosetta</li>
+</ul>
+<p class="variants-more">… and many more</p>
+```

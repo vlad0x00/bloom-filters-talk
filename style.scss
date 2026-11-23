@@ -146,3 +146,23 @@ $presentation-heading-font-weight: 600;
 .reveal table.vs th { color: #a1a1a6; font-weight: 600; }
 .reveal table.vs td.cms { color: #f0a35e; }
 .reveal table.vs .eg { color: #a1a1a6; font-size: 0.8em; }
+
+/* Wall of variant names. */
+.reveal ul.variants {
+  display: block;
+  width: 100%;
+  columns: 4;
+  column-gap: 24px;
+  font-size: 0.62em;
+  line-height: 1.8;
+  margin: 10px 0 0 0;
+  padding-left: 0;
+  list-style: none;
+}
+.reveal .slides ul.variants > li { break-inside: avoid; margin: 0 !important; padding: 0; display: block; }
+.reveal .variants-more {
+  font-size: 0.6em;
+  color: #6e6e73;
+  text-align: right;
+  margin-top: 8px;
+}
