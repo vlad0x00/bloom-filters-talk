@@ -234,7 +234,7 @@ Derivation (n elements, m bits, k hashes):
 - Rows are independent → none within tolerance: (chance one row isn't)^rows
 - More columns → smaller error; more rows → more confidence
 - Because of row separation, the error is slightly greater than that of a counting Bloom filter with the same memory budget
-- CMS and CBF are effectively the same if you pick a good hash function. Doesn't have to be cryptographically secure, unless that's your specific use-case.
+- CMS and CBF are effectively the same if you pick a good hash function and the filters are relatively large. Doesn't have to be cryptographically secure, unless that's your specific use-case.
 :::
 
 ## Bloom filter variants and relatives
