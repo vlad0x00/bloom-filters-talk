@@ -1,7 +1,8 @@
 """Slide: the same example as slide 10, but each word now sets/checks k = 3 bits.
 
-"kitty" lands on two bits that "cat" set, but its third bit is still 0, so the
-answer is "definitely not": the false positive from slide 10 is gone.
+"dog" lands on one bit that "cat" set, and "kitty" on two, but each still has a
+0 bit, so both answers are "definitely not". For "kitty"
+the false positive from slide 10 is gone.
 
 h1 is the same function as slide 10 (hashing.h32); h2 and h3 add a fixed salt.
 Writes one transparent SVG per click into figures/out/multihash/ and an HTML
@@ -20,7 +21,7 @@ PURPLE = "#8a3fd1"
 LAYERS = OUT / "multihash"
 
 M, K = 16, 3
-SALTS = ["", "#27", "#43"]          # h1 (same as slide 10), h2, h3
+SALTS = ["", "#2", "#173"]         # h1 (same as slide 10), h2, h3
 
 
 def positions(word):
@@ -29,7 +30,8 @@ def positions(word):
 
 CAT, DOG, KITTY = positions("cat"), positions("dog"), positions("kitty")
 assert len(set(CAT)) == len(set(DOG)) == len(set(KITTY)) == K
-assert not set(DOG) & set(CAT), "dog should miss all of cat's bits"
+assert len(set(DOG) & set(CAT)) == 1, "dog should hit exactly 1 of cat's bits"
+assert not set(DOG) & set(KITTY), "dog and kitty should touch different bits"
 assert len(set(KITTY) & set(CAT)) == 2, "kitty should hit exactly 2 of cat's bits"
 KITTY_ZERO = next(p for p in KITTY if p not in CAT)
 
@@ -108,7 +110,7 @@ def set_bit(i):
 
 
 ANS_Y = 0.10
-DOG_ANS = DOG[0]   # point the "dog" answer at its first bit (same bit as on slide 10)
+DOG_ANS = max(p for p in DOG if p not in CAT)   # one of dog's 0 bits, away from kitty's answer
 clicks = [
     # insert "cat": 3 bits
     column("cat", CAT, "insert", BLUE),
@@ -117,7 +119,7 @@ clicks = [
     # query "dog": all three bits are 0
     column("dog", DOG, "query", ORANGE),
     to_bits("dog", DOG, ORANGE) + [outline(p, ORANGE) for p in DOG],
-    [ax.text(cell_x(DOG_ANS), ANS_Y, "all 0 → definitely not", ha="center", va="center",
+    [ax.text(cell_x(DOG_ANS), ANS_Y, "0 → definitely not", ha="center", va="center",
              fontsize=19, color=ORANGE, fontweight="bold")],
     # query "kitty": two bits are 1 (set by cat), one is 0
     column("kitty", KITTY, "query", PURPLE),
