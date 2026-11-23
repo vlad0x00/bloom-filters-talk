@@ -13,6 +13,7 @@ pagetitle: "Bloom Filters"
 - Worked in scientific computing most of my career (almost a decade)
 - Right now working in bot detection. Fun fact
 - Have used Bloom filters in many projects
+- Are questions throughout presentation allowed?
 :::
 
 ## What is a Bloom filter? {background-image="figures/static/bloom1970.png" background-size="contain" background-position="right" background-opacity="0.5"}
