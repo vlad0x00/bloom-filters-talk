@@ -1,7 +1,7 @@
 FIGURE_SRC := $(filter-out figures/style.py,$(wildcard figures/*.py))
 FIGURE_STAMPS := $(patsubst figures/%.py,figures/out/.%.stamp,$(FIGURE_SRC))
 
-.PHONY: all figures slides preview pdf clean
+.PHONY: all figures slides preview serve pdf clean
 
 all: slides
 
@@ -17,6 +17,11 @@ slides: figures
 
 preview: figures
 	uv run quarto preview
+
+# Serve the built deck over HTTP (speaker notes don't sync over file://).
+serve: slides
+	@echo "Open http://localhost:8000"
+	cd _site && python3 -m http.server 8000
 
 # Needs Chromium; prints the deck via reveal.js print mode.
 pdf: slides

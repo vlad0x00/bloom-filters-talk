@@ -17,10 +17,11 @@ Slides for a ~30-minute talk on Bloom filters and their variants at [Vancouver S
 make figures   # regenerate changed figures only
 make preview   # live-reloading preview in the browser
 make slides    # render to _site/index.html
+make serve     # build, then serve at http://localhost:8000 (use this to present)
 make pdf       # export _site/slides.pdf
 ```
 
-Presenter view: press `S` in the browser. Overview: `O`.
+Presenter view: press `S` in the browser. Open the deck over HTTP (`make serve` or `make preview`), not as a `file://` path: over `file://` the speaker notes stay empty. Overview: `O`.
 
 ## Adding a figure
 
