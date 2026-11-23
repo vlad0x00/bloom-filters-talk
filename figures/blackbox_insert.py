@@ -14,9 +14,9 @@ from style import save_animation, BLUE, GREY, INK, ORANGE, OUT
 
 FPS = 30
 ITEMS = [
-    ('"cat"', "a string"),
+    ('"GATTACA"', "a DNA sequence"),
     ("42", "a number"),
-    ("linux-6.12.tar.xz", "a whole file"),
+    ("bloom-filter-slides.tar.zst", "a whole file"),
 ]
 
 # Timeline per item, in frames.
@@ -24,7 +24,7 @@ HIGHLIGHT, TO_HASH, HASHING, TO_BOX, SETTLE = 10, 25, 20, 25, 15
 PER_ITEM = HIGHLIGHT + TO_HASH + HASHING + TO_BOX + SETTLE
 TAIL = 2 * FPS  # hold the final frame
 
-ITEM_X, HASH_X, BOX_X = 0.17, 0.52, 0.84
+ITEM_X, HASH_X, BOX_X = 0.21, 0.55, 0.85
 ITEM_Y = [0.72, 0.50, 0.28]
 MONO = "DejaVu Sans Mono"
 
