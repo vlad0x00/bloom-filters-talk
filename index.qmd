@@ -225,7 +225,7 @@ Derivation (n elements, m bits, k hashes):
 </table>
 </div>
 </div>
-<div class="fragment" data-fragment-index="6"><p class="fragment fade-out llm-warn" data-fragment-index="7">Not actually true! LLMs can mislead you here</p></div>
+<div class="fragment" data-fragment-index="6"><p class="fragment fade-out llm-warn" data-fragment-index="7">Not really true! LLMs can mislead you here</p></div>
 ```
 
 ::: {.notes}
