@@ -25,4 +25,4 @@ Presenter view: press `S` in the browser. Open the deck over HTTP (`make serve` 
 
 ## Adding a figure
 
-Create `figures/<name>.py` that writes to `OUT / "<name>.svg"` (or `.mp4`), importing paths and style from `figures/style.py`. Reference it in `index.qmd` as `figures/out/<name>.svg` or ``<video data-autoplay muted playsinline src="figures/out/<name>.webm"></video>``.
+Create `figures/<name>.py` that writes to `OUT / "<name>.svg"` (for animations, call `save_animation(anim, "<name>", fps)`), importing paths and style from `figures/style.py`. Reference it in `index.qmd` as `figures/out/<name>.svg` or `<video data-autoplay muted playsinline src="figures/out/<name>.webm"></video>`.
