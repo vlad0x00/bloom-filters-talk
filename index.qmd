@@ -37,6 +37,10 @@ pagetitle: "Bloom Filters"
 
 <video data-autoplay muted playsinline src="figures/out/blackbox_insert.webm" style="width: 100%;"></video>
 
+::: {.notes}
+- Hash function choice doesn't matter too much. Faster is better. Secure is unnecessary
+:::
+
 ## False-positive rate vs. memory
 
 ![](figures/out/fp_rate.svg){fig-align="center"}

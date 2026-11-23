@@ -1,8 +1,8 @@
 """Animation: a Bloom filter as a black box.
 
 Left: examples of things that can go in (anything hashable).
-Right, step by step: insert "cat" (string -> hash number -> box), then query
-"dog" (string -> hash number -> box -> "definitely not").
+Right, step by step: insert "cat" (string -> hash number -> box), query "dog"
+("definitely not"), then query "kitty" ("possibly yes": a false positive).
 """
 
 import hashlib
@@ -14,7 +14,7 @@ from matplotlib.patches import FancyBboxPatch
 from style import save_animation, BLUE, GREY, INK, ORANGE
 
 FPS = 30
-STEP = 24          # frames per reveal step
+STEP = 22          # frames per reveal step
 FADE = 10          # frames to fade a step in
 HOLD = 3 * FPS     # hold the final frame
 MONO = "DejaVu Sans Mono"
@@ -38,15 +38,15 @@ ax.set_ylim(0, 1)
 ax.axis("off")
 
 # --- Left: static list of hashable examples --------------------------------------
-ax.text(0.14, 0.88, "anything hashable", ha="center", fontsize=20, color=GREY)
+ax.text(0.13, 0.88, "anything hashable", ha="center", fontsize=20, color=GREY)
 for (label, kind), y in zip(EXAMPLES, [0.70, 0.50, 0.30]):
-    ax.text(0.14, y, label, ha="center", va="center", fontsize=19, family=MONO, color=INK,
+    ax.text(0.13, y, label, ha="center", va="center", fontsize=19, family=MONO, color=INK,
             bbox=dict(boxstyle="round,pad=0.45", fc="white", ec=INK, lw=1.5))
-    ax.text(0.14, y - 0.075, kind, ha="center", va="center", fontsize=15, color=GREY)
-ax.plot([0.31, 0.31], [0.12, 0.90], color=GREY, lw=1, alpha=0.4)
+    ax.text(0.13, y - 0.075, kind, ha="center", va="center", fontsize=15, color=GREY)
+ax.plot([0.28, 0.28], [0.12, 0.90], color=GREY, lw=1, alpha=0.4)
 
 # --- Right: the Bloom filter box (always visible) ---------------------------------
-BOX_L, BOX_R, BOX_B, BOX_T = 0.79, 0.95, 0.32, 0.80
+BOX_L, BOX_R, BOX_B, BOX_T = 0.645, 0.765, 0.14, 0.86
 BOX_CX = (BOX_L + BOX_R) / 2
 ax.add_patch(FancyBboxPatch((BOX_L, BOX_B), BOX_R - BOX_L, BOX_T - BOX_B,
                             boxstyle="round,pad=0.005,rounding_size=0.015", fc=INK, ec=INK))
@@ -73,23 +73,32 @@ def arrow(x0, y0, x1, y1, color, label=None):
     return parts
 
 
-def row(y, verb, word, color):
-    """Reveal steps for one row: label + word, arrow 'hash', number, arrow into the box."""
-    title = ax.text(0.36, y + 0.10, verb, ha="left", va="center", fontsize=20, color=color,
+def row(y, verb, word, color, answer=None, note=None):
+    """Reveal steps for one row: word, hash, number, into the box, and (for queries) the answer."""
+    title = ax.text(0.31, y + 0.085, verb, ha="left", va="center", fontsize=20, color=color,
                     fontweight="bold")
-    return [
-        [title, element(0.42, y, word)],
-        arrow(0.475, y, 0.565, y, color, "hash"),
-        [number(0.64, y, hash_number(word.strip('"')), color)],
-        arrow(0.715, y, BOX_L - 0.005, y, color),
+    steps = [
+        [title, element(0.355, y, word)],
+        arrow(0.415, y, 0.475, y, color, "hash"),
+        [number(0.54, y, hash_number(word.strip('"')), color)],
+        arrow(0.60, y, BOX_L - 0.005, y, color),
     ]
+    if answer:
+        steps.append(arrow(BOX_R + 0.005, y, BOX_R + 0.05, y, color))
+        steps.append([ax.text(BOX_R + 0.06, y, answer, ha="left", va="center", fontsize=21,
+                              color=INK, fontweight="bold")])
+    if note:
+        steps.append([ax.text(BOX_R + 0.06, y - 0.06, note, ha="left", va="center", fontsize=17,
+                              color=RED)])
+    return steps
 
 
-INS_Y, QRY_Y = 0.66, 0.41
-steps = row(INS_Y, "insert", '"cat"', BLUE) + row(QRY_Y, "query", '"dog"', ORANGE)
-steps.append(arrow(BOX_CX, BOX_B - 0.01, BOX_CX, 0.19, ORANGE))
-steps.append([ax.text(BOX_CX, 0.12, "definitely not", ha="center", va="center", fontsize=22,
-                      color=ORANGE, fontweight="bold")])
+RED = "#d64545"
+steps = (
+    row(0.72, "insert", '"cat"', BLUE)
+    + row(0.48, "query", '"dog"', ORANGE, answer="definitely not")
+    + row(0.24, "query", '"kitty"', ORANGE, answer="possibly yes", note="false positive!")
+)
 
 
 def set_alpha(artist, a):
