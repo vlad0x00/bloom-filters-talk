@@ -170,6 +170,8 @@ False-positive rate: (3/16)³ ≈ **0.66%** <span class="was">(was 1/16 = 6.25% 
 {{< include figures/out/optimal_k_stack.md >}}
 
 ::: {.notes}
+- FP rate calculation is inexact because we dunno how many bits overlap
+
 Derivation (n elements, m bits, k hashes):
 
 1. One hash sets a given bit with prob 1/m → bit stays 0: (1 − 1/m)

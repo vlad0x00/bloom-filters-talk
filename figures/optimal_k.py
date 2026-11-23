@@ -54,7 +54,7 @@ ax.grid(axis="y", color=GREY, alpha=0.2)
 
 # Formulas: same size, centred in the plot.
 formulas = [
-    ax.text(10.5, 6.6, r"$FP \approx \left(1 - e^{-kn/m}\right)^{k}$", fontsize=24, color=INK,
+    ax.text(10.5, 6.6, r"$\mathrm{FP\ rate} \approx \left(1 - e^{-kn/m}\right)^{k}$", fontsize=24, color=INK,
             ha="center", va="center"),
     ax.text(10.5, 5.35, r"$k_{opt} = (m/n)\,\ln 2 \approx 6.9$", fontsize=24, color=INK,
             ha="center", va="center"),
