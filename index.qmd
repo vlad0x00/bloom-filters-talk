@@ -237,6 +237,25 @@ Derivation (n elements, m bits, k hashes):
 - CMS and CBF are effectively the same if you pick a good hash function and the filters are relatively large. Doesn't have to be cryptographically secure, unless that's your specific use-case.
 :::
 
+## Multi-index Bloom filter (miBF) {.inside background-color="#1d1d1f"}
+
+::: {.peek}
+{{< include figures/out/mibf_stack.md >}}
+:::
+
+::: {.fp-rate .fragment data-fragment-index="3"}
+Bits and rank interleaved in memory → **≤ 2 cache misses** per lookup
+:::
+
+::: {.notes}
+- One structure answers "which ID?" instead of one Bloom filter per ID: O(1) vs O(n)
+- Real miBF: 512-bit blocks, rank costs 64/512 = 0.125 bits per bit
+- Spaced seeds instead of hash functions → tolerates a mismatch
+- ID collisions → saturation bit marks unreliable IDs
+- Chu et al., PNAS 2020 (Birol lab, BCGSC)
+- Locally developed at the Genome Sciences Centre!
+:::
+
 ## Bloom filter variants and relatives
 
 ```{=html}
@@ -304,25 +323,6 @@ Derivation (n elements, m bits, k hashes):
 
 ::: {.notes}
 - List is Claude-generated
-:::
-
-## Multi-index Bloom filter (miBF) {.inside background-color="#1d1d1f"}
-
-::: {.peek}
-{{< include figures/out/mibf_stack.md >}}
-:::
-
-::: {.fp-rate .fragment data-fragment-index="3"}
-Bits and rank interleaved in memory → **≤ 2 cache misses** per lookup
-:::
-
-::: {.notes}
-- One structure answers "which genome?" instead of n Bloom filters: O(1) vs O(n)
-- Real miBF: 512-bit blocks, rank costs 64/512 = 0.125 bits per bit
-- Spaced seeds instead of hash functions → tolerates a mismatch
-- ID collisions → saturation bit marks unreliable IDs
-- Chu et al., PNAS 2020 (Birol lab, BCGSC)
-- Locally developed at the Genome Sciences Centre!
 :::
 
 ## Q&A {.center .section-slide}

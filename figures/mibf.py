@@ -1,12 +1,12 @@
 """Slide: multi-index Bloom filter (miBF, Chu et al., PNAS 2020).
 
-A Bloom filter that also says WHICH set (genome) a key came from. Three arrays:
+A Bloom filter that also stores a small value (an ID) with each inserted key. Three arrays:
   bits  - the usual Bloom filter bit array
   rank  - number of 1s before each block (here 4-bit blocks; 512-bit in the paper)
-  IDs   - one genome ID per set bit, stored compactly (no space for 0 bits)
+  IDs   - one ID per set bit, stored compactly (no space for 0 bits)
 The ID for bit p lives at IDs[rank(block of p) + 1s before p inside its block].
 
-Clicks: query "GATTACA" -> 3 set bits -> rank gives ID positions -> IDs -> genome 2.
+Clicks: query "GATTACA" -> 3 set bits -> rank gives ID positions -> IDs -> ID 2.
 Our own small example, not the paper's figure.
 
 Writes transparent SVG layers into figures/out/mibf/ and an HTML snippet
@@ -22,12 +22,12 @@ plt.rcParams["svg.fonttype"] = "path"
 MONO = "DejaVu Sans Mono"
 PURPLE = "#8a3fd1"
 GREEN = "#2e9e5b"
-GENOME_COLOR = {1: BLUE, 2: ORANGE, 3: GREEN}
+ID_COLOR = {1: BLUE, 2: ORANGE, 3: GREEN}
 LAYERS = OUT / "mibf"
 
 M, BLOCK = 16, 4
 ONES = [1, 3, 6, 7, 9, 12, 13, 15]       # set bits
-IDS = [1, 3, 2, 1, 2, 3, 2, 1]           # genome ID for each set bit, in order
+IDS = [1, 3, 2, 1, 2, 3, 2, 1]           # ID for each set bit, in order
 QUERY = [6, 9, 13]                       # h1, h2, h3 of the query k-mer
 assert len(ONES) == len(IDS) and all(q in ONES for q in QUERY)
 
@@ -94,11 +94,11 @@ for j, g in enumerate(IDS):
     ax.add_patch(Rectangle((ID_X0 + j * ID_CELL, ID_Y), ID_CELL, ID_H, fc="white", ec=INK,
                            lw=2))
     ax.text(id_x(j), ID_Y + ID_H / 2, str(g), ha="center", va="center", fontsize=22,
-            family=MONO, color=GENOME_COLOR[g], fontweight="bold")
+            family=MONO, color=ID_COLOR[g], fontweight="bold")
     ax.text(id_x(j), ID_Y - 0.025, str(j), ha="center", va="center", fontsize=11,
             color=GREY)
 for y, h, label in [(BIT_Y, BIT_H, "bits"), (RANK_Y, RANK_H, "rank: 1s\nbefore block"),
-                    (ID_Y, ID_H, "genome IDs:\none per set bit")]:
+                    (ID_Y, ID_H, "IDs:\none per set bit")]:
     ax.text(LABEL_X if label == "bits" or "rank" in label else ID_X0 - 0.02, y + h / 2,
             label, ha="right", va="center", fontsize=15, color=GREY, linespacing=1.1)
 static = list(ax.texts) + list(ax.patches) + list(ax.lines)
@@ -130,7 +130,7 @@ for p in QUERY:
 
 # --- Click 3: read the IDs -----------------------------------------------------------------
 ids = [outline(ID_X0 + id_index(p)[0] * ID_CELL, ID_Y, ID_CELL, ID_H, PURPLE) for p in QUERY]
-ids.append(ax.text(ID_X0 + len(IDS) * ID_CELL + 0.03, ID_Y + ID_H / 2, "→ genome 2",
+ids.append(ax.text(ID_X0 + len(IDS) * ID_CELL + 0.03, ID_Y + ID_H / 2, "→ ID 2",
                    ha="left", va="center", fontsize=24, color=ORANGE, fontweight="bold"))
 
 layers = [("query", query, 0), ("rank", rank, 1), ("ids", ids, 2)]
