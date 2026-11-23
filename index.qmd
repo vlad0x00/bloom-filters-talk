@@ -180,6 +180,7 @@ False-positive rate: (3/16)³ ≈ **0.66%** <span class="was">(was 1/16 = 6.25% 
 
 ::: {.notes}
 - FP rate calculation is inexact because we dunno how many bits overlap
+- ~10 bits/element → 1% FP (k ≈ 7). Every +4.8 bits/element → 10× fewer FPs
 
 Derivation (n elements, m bits, k hashes):
 
