@@ -322,6 +322,7 @@ Bits and rank interleaved in memory → **≤ 2 cache misses** per lookup
 - Spaced seeds instead of hash functions → tolerates a mismatch
 - ID collisions → saturation bit marks unreliable IDs
 - Chu et al., PNAS 2020 (Birol lab, BCGSC)
+- Locally developed at the Genome Sciences Centre!
 :::
 
 ## Q&A {.center .section-slide}
