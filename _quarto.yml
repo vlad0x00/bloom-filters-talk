@@ -20,3 +20,13 @@ format:
     preview-links: false
     chalkboard: false
     pdf-separate-fragments: false
+    include-in-header:
+      text: |
+        <style>
+          .reveal-viewport {
+            background-image: url("figures/out/background.svg");
+            background-size: cover;
+            background-position: bottom right;
+            background-repeat: no-repeat;
+          }
+        </style>
