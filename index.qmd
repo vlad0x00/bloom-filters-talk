@@ -18,36 +18,13 @@ pagetitle: "Bloom Filters"
 ## What is a Bloom filter? {background-image="figures/static/bloom1970.png" background-size="contain" background-position="right" background-opacity="0.5"}
 
 :::: {.columns}
-::: {.column width="62%"}
-
-A space-efficient, probabilistic data structure that answers:
-
-> **Is $x$ in the set?**
-
-- **"Definitely not"**, or **"probably yes"**
+::: {.column width="55%"}
+- Published in 1970 by Burton H. Bloom
+- A space-efficient, probabilistic set data structure
 - False positives are possible; false negatives are not
-- Trades a small error rate for a lot of memory
-
-::: {.small}
-Burton H. Bloom, *Space/Time Trade-offs in Hash Coding with Allowable Errors*,
-Communications of the ACM 13(7), July 1970
-:::
-
+- Trades a small error rate for significantly less memory usage
 :::
 ::::
-
-::: {.notes}
-- Bloom worked at Computer Usage Company, Newton Upper Falls, Massachusetts.
-- His motivating example: automatic hyphenation of a 500,000-word dictionary.
-  About 90% of words follow simple rules; the other 10% need an expensive
-  disk lookup for their hyphenation pattern.
-- The filter sits in core memory and holds the 10% "hard" words. If it says
-  "definitely not", hyphenate by rule; if "probably yes", go to disk.
-- A false positive only costs an unnecessary disk read, never a wrong answer.
-- His result: a hash area 18% of the size of an error-free hash table still
-  eliminates 87% of the disk accesses.
-- He called false positives "errors of commission".
-:::
 
 ## False-positive rate vs. memory
 
