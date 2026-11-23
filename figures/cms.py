@@ -46,6 +46,9 @@ ax.axis("off")
 CELL, X0, CH = 0.07, 0.25, 0.14
 ROW_TOP = [0.80, 0.56, 0.32]             # top edge of each row
 X_END = X0 + W * CELL
+# Half the 2 pt border width, in axes coordinates (the axes fill the figure).
+INSET_X = 1 / (fig.get_size_inches()[0] * 72)
+INSET_Y = 1 / (fig.get_size_inches()[1] * 72)
 
 
 def cell_x(i):
@@ -54,9 +57,14 @@ def cell_x(i):
 
 def draw_counter(r, i, value, zorder=1):
     y = ROW_TOP[r] - CH
+    fill = LIGHT if value else "white"
+    if zorder == 1:   # base layer: the only layer that draws cell borders
+        cell = Rectangle((X0 + i * CELL, y), CELL, CH, fc=fill, ec=INK, lw=2, zorder=zorder)
+    else:             # update layers: repaint the inside only, so borders don't stack up darker
+        cell = Rectangle((X0 + i * CELL + INSET_X, y + INSET_Y), CELL - 2 * INSET_X,
+                         CH - 2 * INSET_Y, fc=fill, ec="none", zorder=zorder)
     return [
-        ax.add_patch(Rectangle((X0 + i * CELL, y), CELL, CH, fc=LIGHT if value else "white",
-                               ec=INK, lw=2, zorder=zorder)),
+        ax.add_patch(cell),
         ax.text(cell_x(i), y + CH / 2, str(value), ha="center", va="center", fontsize=24,
                 family=MONO, color=INK, fontweight="bold" if value else "normal",
                 zorder=zorder + 1),
