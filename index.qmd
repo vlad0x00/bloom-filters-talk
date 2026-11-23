@@ -168,3 +168,13 @@ False-positive rate: (3/16)³ ≈ **0.66%** <span class="was">(was 1/16 = 6.25% 
 ## How many hash functions?
 
 {{< include figures/out/optimal_k_stack.md >}}
+
+::: {.notes}
+Derivation (n elements, m bits, k hashes):
+
+1. One hash sets a given bit with prob 1/m → bit stays 0: (1 − 1/m)
+2. After n inserts = kn bit-sets: P(bit still 0) = (1 − 1/m)^(kn) ≈ e^(−kn/m)
+3. Non-member is a FP if all k of its bits are 1: FP ≈ (1 − e^(−kn/m))^k
+4. Optimum: write p = e^(−kn/m) (fraction of 0 bits). Then ln FP = −(m/n)·ln p·ln(1 − p), symmetric in p and 1 − p → minimum at p = 1/2
+5. e^(−kn/m) = 1/2 → k = (m/n)·ln 2. At the optimum, half the bits are 1, and FP = (1/2)^k
+:::

@@ -52,11 +52,11 @@ ax.set_ylabel("false-positive rate (%)")
 ax.set_title(f"m = {M} bits, n = {N} elements", fontsize=17, color=GREY, loc="right")
 ax.grid(axis="y", color=GREY, alpha=0.2)
 
-# Formulas: same size, in the empty middle-right area of the plot.
+# Formulas: same size, centred in the plot.
 formulas = [
-    ax.text(14.8, 6.9, r"$FP \approx \left(1 - e^{-kn/m}\right)^{k}$", fontsize=24, color=INK,
+    ax.text(10.5, 6.6, r"$FP \approx \left(1 - e^{-kn/m}\right)^{k}$", fontsize=24, color=INK,
             ha="center", va="center"),
-    ax.text(14.8, 5.75, r"$k_{opt} = (m/n)\,\ln 2 \approx 6.9$", fontsize=24, color=INK,
+    ax.text(10.5, 5.35, r"$k_{opt} = (m/n)\,\ln 2 \approx 6.9$", fontsize=24, color=INK,
             ha="center", va="center"),
 ]
 
