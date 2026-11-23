@@ -21,14 +21,14 @@ def fp(k):
     return (1 - np.exp(-k * N / M)) ** k
 
 
-k_smooth = np.linspace(1, K_MAX, 400)
 k_int = np.arange(1, K_MAX + 1)
 k_opt = M / N * math.log(2)
 k_best = int(k_int[np.argmin(fp(k_int))])
 
 fig, ax = plt.subplots(figsize=(13, 6.2))
-ax.plot(k_smooth, fp(k_smooth) * 100, color=BLUE, lw=3, zorder=2)
-ax.scatter(k_int, fp(k_int) * 100, color=BLUE, s=36, zorder=3)
+# k is a whole number: plot only integer k, joined by thin straight lines to guide the eye.
+ax.plot(k_int, fp(k_int) * 100, color=BLUE, lw=1.5, alpha=0.5, zorder=2)
+ax.scatter(k_int, fp(k_int) * 100, color=BLUE, s=70, zorder=3)
 ax.scatter([k_best], [fp(k_best) * 100], color=ORANGE, s=180, zorder=4)
 
 ax.annotate(f"optimal: k = {k_best}\nFP ≈ {fp(k_best) * 100:.2f}%",
