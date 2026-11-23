@@ -39,6 +39,10 @@ ax.text(1.7, 8.9, "too few hashes:\neach test is weak", fontsize=16, color=GREY,
 ax.text(K_MAX - 0.3, 8.9, "too many hashes:\nthe array fills up with 1s", fontsize=16,
         color=GREY, va="top", ha="right")
 
+ax.text(10.5, 9.3, r"$FP \approx \left(1 - e^{-kn/m}\right)^{k}$", fontsize=26, color=INK,
+        ha="center", va="top")
+ax.text(10.5, 7.75, r"optimal $k = (m/n)\,\ln 2 \approx 6.9$", fontsize=17, color=GREY,
+        ha="center", va="top")
 ax.set_xlim(0.5, K_MAX + 0.5)
 ax.set_ylim(0, 10)
 ax.set_xticks(range(1, K_MAX + 1))
