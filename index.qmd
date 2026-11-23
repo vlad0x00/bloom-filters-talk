@@ -14,6 +14,7 @@ pagetitle: "Bloom Filters"
 - Right now working in bot detection. Fun fact
 - Have used Bloom filters in many projects
 - Are questions throughout presentation allowed?
+- How much time do I have for the presentation?
 :::
 
 ## What is a Bloom filter? {background-image="figures/static/bloom1970.png" background-size="contain" background-position="right" background-opacity="0.5"}
@@ -133,6 +134,10 @@ statistics:{"filter_not_present":0,"maybe":9,
 
 {{< include figures/out/assembly_stack.md >}}
 
+::: {.notes}
+- Can assemble human genome with about 40GiB of RAM
+:::
+
 ## False positives during assembly
 
 ![](figures/out/fp_branches.svg){width="100%"}
@@ -149,6 +154,10 @@ statistics:{"filter_not_present":0,"maybe":9,
 
 ::: {.fp-rate .fragment}
 False-positive rate: 1/16 = **6.25%**
+:::
+
+::: {.notes}
+- A possibly huge element reduced to 1 bit. E.g. a 100 bit element achieves 100x mem usage reduction.
 :::
 
 ## Multiple hash functions {.inside background-color="#1d1d1f"}
