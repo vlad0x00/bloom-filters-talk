@@ -213,6 +213,7 @@ Derivation (n elements, m bits, k hashes):
 
 ::: {.notes}
 - A row's noise averages N / columns
+- Bad row = its noise exceeds the allowed error
 - Rows are independent → all bad: (chance one row is bad)^rows
 - More columns → smaller error; more rows → more confidence
 :::
