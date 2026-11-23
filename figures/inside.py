@@ -1,27 +1,28 @@
-"""Slide: looking inside the black box. A bit array, and inserting "cat" sets one bit.
+"""Slide: looking inside the black box (a bit array), step by step.
 
-The hash value matches slide 3 (first 4 bytes of SHA-256, big-endian), so "cat"
-hashes to the same number the audience already saw.
+1. insert "cat":  hash -> mod 16 -> set that bit
+2. query  "dog":  lands on a 0 bit -> definitely not
+3. query  "kitty": lands on the bit "cat" set -> possibly yes (a false positive)
 
-Writes one transparent SVG per click into figures/out/inside/ and an HTML snippet
-(figures/out/inside_stack.md) that stacks them as reveal.js fragments.
+Hash values match slide 3 (see hashing.py). Writes one transparent SVG per click
+into figures/out/inside/ and an HTML snippet (figures/out/inside_stack.md) that
+stacks them as reveal.js fragments.
 """
-
-import hashlib
 
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch, Rectangle
 
-from style import BLUE, GREY, INK, OUT
+from hashing import h32
+from style import BLUE, GREY, INK, ORANGE, OUT
 
 plt.rcParams["svg.fonttype"] = "path"
 MONO = "DejaVu Sans Mono"
+PURPLE = "#8a3fd1"
 LAYERS = OUT / "inside"
 
 M = 16
-WORD = "cat"
-H = int.from_bytes(hashlib.sha256(WORD.encode()).digest()[:4], "big")
-IDX = H % M
+CAT, DOG, KITTY = (h32(w) for w in ("cat", "dog", "kitty"))
+assert CAT % M == KITTY % M != DOG % M, "cat and kitty must collide, dog must not"
 
 fig = plt.figure(figsize=(16, 7))
 ax = fig.add_axes([0, 0, 1, 1])
@@ -29,60 +30,92 @@ ax.set_xlim(0, 1)
 ax.set_ylim(0, 1)
 ax.axis("off")
 
-CELL, X0, Y0, CH = 0.05, 0.10, 0.22, 0.11   # cell width, left edge, bottom, cell height
+CELL, X0, Y0, CH = 0.05, 0.10, 0.25, 0.11   # cell width, left edge, bottom, cell height
+CELL_TOP = Y0 + CH
 
 
-def cell_center(i):
+def cell_x(i):
     return X0 + (i + 0.5) * CELL
 
 
-def arrow(x0, y0, x1, y1, label=None, rad=0.0):
-    a = FancyArrowPatch((x0, y0), (x1, y1), arrowstyle="-|>", mutation_scale=22, lw=2.5,
-                        color=INK, connectionstyle=f"arc3,rad={rad}")
+def arrow(x0, y0, x1, y1, color, lw=2.5):
+    a = FancyArrowPatch((x0, y0), (x1, y1), arrowstyle="-|>", mutation_scale=22, lw=lw,
+                        color=color)
     ax.add_patch(a)
-    parts = [a]
-    if label:
-        parts.append(ax.text((x0 + x1) / 2, y0 + 0.06, label, ha="center", va="center",
-                             fontsize=17, family=MONO, color=GREY))
-    return parts
+    return a
 
 
 # --- Base layer: the bit array, all zeros ------------------------------------------------
 for i in range(M):
     ax.add_patch(Rectangle((X0 + i * CELL, Y0), CELL, CH, fc="white", ec=INK, lw=2))
-    ax.text(cell_center(i), Y0 + CH / 2, "0", ha="center", va="center", fontsize=24,
-            family=MONO, color=INK)
-    ax.text(cell_center(i), Y0 - 0.05, str(i), ha="center", va="center", fontsize=14, color=GREY)
-ax.text(X0, Y0 + CH + 0.06, f"bit array, m = {M}", ha="left", va="center", fontsize=18, color=GREY)
+    ax.text(cell_x(i), Y0 + CH / 2, "0", ha="center", va="center", fontsize=24, family=MONO,
+            color=INK)
+    ax.text(cell_x(i), Y0 - 0.045, str(i), ha="center", va="center", fontsize=14, color=GREY)
+ax.text(X0 + M * CELL, CELL_TOP + 0.04, f"m = {M} bits", ha="right", va="center", fontsize=16,
+        color=GREY)
 static = list(ax.texts) + list(ax.patches)
 
-# --- Click 1: "cat" is hashed to a number -----------------------------------------------
-TOP = 0.80
-click_hash = [ax.text(0.14, TOP, f'"{WORD}"', ha="center", va="center", fontsize=26, family=MONO,
-                      color=INK, bbox=dict(boxstyle="round,pad=0.45", fc="white", ec=INK, lw=1.8))]
-click_hash += arrow(0.195, TOP, 0.29, TOP, "hash")
-click_hash.append(ax.text(0.375, TOP, str(H), ha="center", va="center", fontsize=24,
-                          family=MONO, color=BLUE))
+# Each operation is a column: word, hash -> number, mod -> bit index, arrow down to the bit.
+COL_X = {"cat": 0.20, "dog": 0.50, "kitty": 0.80}
+Y_WORD, Y_NUM, Y_MOD = 0.88, 0.72, 0.60
 
-# --- Click 2: reduce to a position in the array ------------------------------------------
-click_mod = arrow(0.465, TOP, 0.56, TOP, f"mod {M}")
-click_mod.append(ax.text(0.605, TOP, str(IDX), ha="center", va="center", fontsize=28, family=MONO,
-                         color=BLUE, fontweight="bold"))
-click_mod += arrow(0.605, TOP - 0.06, cell_center(IDX), Y0 + CH + 0.012, rad=0.0)
 
-# --- Click 3: set that bit ------------------------------------------------------------
-click_set = [ax.add_patch(Rectangle((X0 + IDX * CELL, Y0), CELL, CH, fc=BLUE, ec=INK, lw=2,
-                                    zorder=3)),
-             ax.text(cell_center(IDX), Y0 + CH / 2, "1", ha="center", va="center", fontsize=24,
-                     family=MONO, color="white", fontweight="bold", zorder=4)]
+def column(word, value, verb, color):
+    """Click: verb label, the word, and its hash value."""
+    x = COL_X[word]
+    return [
+        ax.text(x, Y_WORD + 0.075, verb, ha="center", va="center", fontsize=16, color=color,
+                fontweight="bold"),
+        ax.text(x, Y_WORD, f'"{word}"', ha="center", va="center", fontsize=22, family=MONO,
+                color=INK, bbox=dict(boxstyle="round,pad=0.4", fc="white", ec=INK, lw=1.6)),
+        arrow(x, Y_WORD - 0.045, x, Y_NUM + 0.04, INK),
+        ax.text(x + 0.012, (Y_WORD + Y_NUM) / 2 - 0.003, "hash", ha="left", va="center",
+                fontsize=14, family=MONO, color=GREY),
+        ax.text(x, Y_NUM, str(value), ha="center", va="center", fontsize=21, family=MONO,
+                color=color),
+    ]
+
+
+def to_bit(word, value, color, dx=0.0):
+    """Click: 'mod 16 = i', then an arrow down to bit i."""
+    x, i = COL_X[word], value % M
+    return [
+        ax.text(x, Y_MOD, f"mod {M} = {i}", ha="center", va="center", fontsize=17, family=MONO,
+                color=color, fontweight="bold"),
+        arrow(x, Y_MOD - 0.035, cell_x(i) + dx, CELL_TOP + 0.012, color),
+    ]
+
+
+def outline(i, color):
+    return ax.add_patch(Rectangle((X0 + i * CELL, Y0), CELL, CH, fc="none", ec=color, lw=5,
+                                  zorder=5))
+
+
+ANS_Y = 0.10
+clicks = [
+    # insert "cat"
+    column("cat", CAT, "insert", BLUE),
+    to_bit("cat", CAT, BLUE, dx=-0.012),
+    [ax.add_patch(Rectangle((X0 + (CAT % M) * CELL, Y0), CELL, CH, fc=BLUE, ec=INK, lw=2,
+                            zorder=3)),
+     ax.text(cell_x(CAT % M), Y0 + CH / 2, "1", ha="center", va="center", fontsize=24,
+             family=MONO, color="white", fontweight="bold", zorder=4)],
+    # query "dog"
+    column("dog", DOG, "query", ORANGE),
+    to_bit("dog", DOG, ORANGE) + [outline(DOG % M, ORANGE)],
+    [ax.text(cell_x(DOG % M), ANS_Y, "0 → definitely not", ha="center", va="center",
+             fontsize=19, color=ORANGE, fontweight="bold")],
+    # query "kitty"
+    column("kitty", KITTY, "query", PURPLE),
+    to_bit("kitty", KITTY, PURPLE, dx=0.012) + [outline(KITTY % M, PURPLE)],
+    [ax.text(cell_x(KITTY % M), ANS_Y, "1 → possibly yes", ha="center", va="center",
+             fontsize=19, color=PURPLE, fontweight="bold"),
+     ax.text(cell_x(KITTY % M), ANS_Y - 0.06, 'false positive! ("cat" set this bit)',
+             ha="center", va="center", fontsize=15, color=PURPLE)],
+]
 
 # --- Write layers ------------------------------------------------------------------
-layers = [
-    ("layer_00.svg", static),
-    ("layer_01.svg", click_hash),
-    ("layer_02.svg", click_mod),
-    ("layer_03.svg", click_set),
-]
+layers = [("layer_00.svg", static)] + [(f"layer_{n:02d}.svg", c) for n, c in enumerate(clicks, 1)]
 everything = [a for _, arts in layers for a in arts]
 LAYERS.mkdir(exist_ok=True)
 for old in LAYERS.glob("*.svg"):

@@ -1,4 +1,4 @@
-FIGURE_SRC := $(filter-out figures/style.py,$(wildcard figures/*.py))
+FIGURE_SRC := $(filter-out figures/style.py figures/hashing.py,$(wildcard figures/*.py))
 FIGURE_STAMPS := $(patsubst figures/%.py,figures/out/.%.stamp,$(FIGURE_SRC))
 
 .PHONY: all figures slides preview serve pdf clean
@@ -7,7 +7,7 @@ all: slides
 
 figures: $(FIGURE_STAMPS)
 
-figures/out/.%.stamp: figures/%.py figures/style.py
+figures/out/.%.stamp: figures/%.py figures/style.py figures/hashing.py
 	@mkdir -p figures/out
 	cd figures && uv run python $*.py
 	@touch $@

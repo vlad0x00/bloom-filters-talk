@@ -9,11 +9,10 @@ snippet that stacks them as reveal.js fragments. Each right-arrow press on the
 slide reveals the next layer.
 """
 
-import hashlib
-
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch
 
+from hashing import h32
 from style import BLUE, GREY, INK, ORANGE, OUT
 
 # Glyphs as paths, so the slide doesn't depend on fonts installed on the laptop.
@@ -29,8 +28,8 @@ EXAMPLES = [
 
 
 def hash_number(text: str) -> str:
-    """A 32-bit hash, shown as a plain decimal number."""
-    return str(int.from_bytes(hashlib.sha256(text.encode()).digest()[:4], "big"))
+    """A 32-bit hash, shown as a plain decimal number (same function as slide 10)."""
+    return str(h32(text))
 
 
 fig = plt.figure(figsize=(16, 8))
