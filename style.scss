@@ -129,3 +129,20 @@ $presentation-heading-font-weight: 600;
   margin-left: auto;   /* centre like the unwrapped layers */
   margin-right: auto;
 }
+
+/* Counting Bloom filter vs count-min sketch, under the panel on the dark wall. */
+.reveal table.vs {
+  color: #f5f5f7;
+  font-size: 0.54em;
+  margin: 14px auto 0;
+  border-collapse: collapse;
+}
+.reveal table.vs th,
+.reveal table.vs td {
+  padding: 5px 18px;
+  border-bottom: 1px solid #3a3a3c;
+  text-align: left;
+}
+.reveal table.vs th { color: #a1a1a6; font-weight: 600; }
+.reveal table.vs td:first-child { color: #a1a1a6; }
+.reveal table.vs td.cms { color: #f0a35e; }
