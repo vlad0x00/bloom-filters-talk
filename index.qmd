@@ -180,3 +180,9 @@ Derivation (n elements, m bits, k hashes):
 4. Optimum: write p = e^(−kn/m) (fraction of 0 bits). Then ln FP = −(m/n)·ln p·ln(1 − p), symmetric in p and 1 − p → minimum at p = 1/2
 5. e^(−kn/m) = 1/2 → k = (m/n)·ln 2. At the optimum, half the bits are 1, and FP = (1/2)^k
 :::
+
+## Counting Bloom filter {.inside background-color="#1d1d1f"}
+
+::: {.peek}
+{{< include figures/out/counting_stack.md >}}
+:::

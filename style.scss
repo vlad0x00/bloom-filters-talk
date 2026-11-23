@@ -116,3 +116,14 @@ $presentation-heading-font-weight: 600;
   font-size: 0.8em;
   margin-left: 12px;
 }
+
+/* A layer that appears and later disappears: a wrapper div (fade in) around an
+   image (fade out). The wrapper must span the stack exactly like the images do. */
+.reveal .r-stack > .stack-wrap {
+  width: 100%;
+}
+.reveal .r-stack > .stack-wrap img {
+  display: block;
+  width: 100%;
+  max-height: none;
+}
