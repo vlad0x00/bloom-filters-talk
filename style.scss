@@ -166,3 +166,12 @@ $presentation-heading-font-weight: 600;
   text-align: right;
   margin-top: 8px;
 }
+
+/* Punchline under the count-min comparison. */
+.reveal .llm-warn {
+  color: #ff6b6b;
+  font-weight: 600;
+  font-size: 0.7em;
+  text-align: center;
+  margin-top: 10px;
+}

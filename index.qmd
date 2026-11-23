@@ -217,6 +217,7 @@ Derivation (n elements, m bits, k hashes):
 <tr><td>how <b>often</b> the count is wrong</td><td class="cms">how <b>often</b> and how <b>much</b> it can be wrong<br><span class="eg">e.g. 99% of queries are off by at most 0.1% of all insertions</span></td></tr>
 </table>
 </div>
+<p class="fragment llm-warn" data-fragment-index="6">Not actually true! LLMs can mislead you here</p>
 ```
 
 ::: {.notes}
