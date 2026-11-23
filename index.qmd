@@ -15,7 +15,7 @@ pagetitle: "Bloom Filters"
 - Have used Bloom filters in many projects
 :::
 
-## What is a Bloom filter? {background-image="figures/static/bloom1970.png" background-size="contain" background-position="right" background-opacity="0.18"}
+## What is a Bloom filter? {background-image="figures/static/bloom1970.png" background-size="contain" background-position="right" background-opacity="0.3"}
 
 :::: {.columns}
 ::: {.column width="62%"}
