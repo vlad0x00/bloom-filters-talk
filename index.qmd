@@ -109,21 +109,21 @@ Summary
   - "definitely not" → skip the tree diff
   - "maybe" → diff to confirm
 - Off by default: enable once per repo
-- Test repo: 502 commits, 4 false positives → 0.8% false-positive rate
+- Test repo: 1000 commits, 7 false positives → 0.7% false-positive rate
 :::
 ::: {.column width="60%"}
 ```{=html}
 <pre class="terminal small-term"><span class="prompt">$</span> git commit-graph write --reachable --changed-paths
 
 <span class="prompt">$</span> git log --oneline -- README.md
-205574e Update README
-f265e8b Add README
+344f676 Update README
+53aa406 Add README
 
 <span class="prompt">$</span> GIT_TRACE2_PERF=1 git log --oneline -- README.md 2&gt;&amp;1 \
     | grep -o 'statistics.*'
-statistics:{"filter_not_present":0,"maybe":5,
-            <span class="hl">"definitely_not":496</span>,<span class="hl">"false_positive":4</span>}</pre>
-<p class="caption-small">496 of 502 commits skipped without a diff</p>
+statistics:{"filter_not_present":0,"maybe":8,
+            <span class="hl">"definitely_not":991</span>,<span class="hl">"false_positive":7</span>}</pre>
+<p class="caption-small">991 of 1000 commits skipped without a diff</p>
 ```
 :::
 ::::
