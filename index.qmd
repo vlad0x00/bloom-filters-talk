@@ -63,3 +63,5 @@ pagetitle: "Bloom Filters"
 - Generally when you're dealing with lots of data and/or statistical algorithms
 - They can also be used in memory-restricted/embedded systems, e.g. network hardware or CPU caches
 :::
+
+## SQLite demo {.center .section-slide}

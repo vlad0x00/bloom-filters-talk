@@ -48,3 +48,9 @@ $presentation-heading-font-weight: 600;
   font-size: 0.72em;
   color: #6e6e73;
 }
+
+/* Big centred title-only slides (e.g. "SQLite demo"). */
+.reveal .slides section.section-slide h2 {
+  text-align: center;
+  font-size: 2.4em;
+}
