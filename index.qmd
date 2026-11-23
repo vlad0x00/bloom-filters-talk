@@ -173,6 +173,8 @@ False-positive rate: (3/16)³ ≈ **0.66%** <span class="was">(was 1/16 = 6.25% 
 ::: {.notes}
 - There's a trade-off: more hashes = more tests, but also more bit pollution
 - Bad cache locality: k hashes = k cache misses. Fix: blocked Bloom filter (1 cache line)
+  - Filter split into 512-bit blocks (one cache line). 1st hash picks the block, k bits set inside it
+  - Cost: slightly higher FP rate (some blocks fill up more than others)
 :::
 
 ## How many hash functions?
