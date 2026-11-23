@@ -29,7 +29,7 @@ pagetitle: "Bloom Filters"
 ::: {.notes}
 - How many people know or have used Bloom filter(s)?
 - The original paper: memory was too small for a full hash table, so Bloom traded a small rate of false "yes" answers for a much smaller in-memory structure
-  - Example: hyphenating 500,000 words, where 10% need a slow disk lookup. The filter in memory says which ones; a filter at 18% of the full size still skipped 87% of disk reads
+  - Illustrative example in the paper (hypothetical, "let us assume"): hyphenating 500,000 words, where 10% need a slow disk lookup. An error-free hash table would need ~2M bits; allowing 1/16 false positives needs <300k bits and still cuts disk reads by 84%
 :::
 
 ## {.no-title .center}
