@@ -167,4 +167,4 @@ False-positive rate: (3/16)³ ≈ **0.66%** <span class="was">(was 1/16 = 6.25% 
 
 ## How many hash functions?
 
-![](figures/out/optimal_k.svg){fig-align="center"}
+{{< include figures/out/optimal_k_stack.md >}}
