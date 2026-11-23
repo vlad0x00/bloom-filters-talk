@@ -283,3 +283,7 @@ Derivation (n elements, m bits, k hashes):
 </ul>
 <p class="variants-more">… and many more</p>
 ```
+
+::: {.notes}
+- List is Claude-generated
+:::
