@@ -213,7 +213,7 @@ Derivation (n elements, m bits, k hashes):
 
 ::: {.notes}
 - Why the bound:
-  - A row's noise averages N / w
+  - A row's noise averages N / columns
   - Noise > ~3× average in ≤ 37% of rows
   - Rows are independent → all bad: 37% × 37% × …
   - More columns → smaller error; more rows → more confidence
