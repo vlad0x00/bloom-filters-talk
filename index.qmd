@@ -217,6 +217,4 @@ Derivation (n elements, m bits, k hashes):
   - Noise > ~3× average in ≤ 37% of rows
   - Rows are independent → all bad: 37% × 37% × …
   - More columns → smaller error; more rows → more confidence
-- 0.1% error, 99% sure → 2719 × 5 counters ≈ 54 KB, any number of items
-- Error is a share of all insertions: good for frequent items, poor for rare ones
 :::
