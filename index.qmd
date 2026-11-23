@@ -57,3 +57,8 @@ pagetitle: "Bloom Filters"
   <div><strong>Malicious URL detection</strong><span>Check URLs locally; ask the server only on a "maybe"</span></div>
 </div>
 ```
+
+::: {.notes}
+- They're often used to avoid a costly action
+- Generally when you're dealing with lots of data and/or statistical algorithms
+:::
