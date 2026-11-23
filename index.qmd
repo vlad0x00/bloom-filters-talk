@@ -206,21 +206,19 @@ Derivation (n elements, m bits, k hashes):
 <div class="fragment" data-fragment-index="5">
 <table class="vs">
 <tr><th>Counting Bloom filter</th><th>Count-min sketch</th></tr>
-<tr><td>how <b>often</b> the count is wrong (≈ FP rate)</td><td class="cms">how <b>much</b>: never under, over by at most <b>ε</b> × N, except with probability <b>δ</b></td></tr>
+<tr><td>how <b>often</b> the count is wrong</td><td class="cms">how <b>much</b> it can be wrong<br><span class="eg">e.g. over by ≤ 0.1% of all events, 99% of the time</span></td></tr>
 </table>
-<p class="vs-legend">N = all events counted &nbsp;·&nbsp; ε = allowed error, as a share of N &nbsp;·&nbsp; δ = chance of a bigger error<br>
-e.g. ε = 0.1%, δ = 1% → over by at most 0.1% of N, 99% of the time &nbsp;(<i>w</i> = e/ε columns, <i>d</i> = ln(1/δ) rows)</p>
 </div>
 ```
 
 ::: {.notes}
-- Same idea as a counting Bloom filter, but each hash gets its own row
-- Collisions only add → every row ≥ true count → min never undercounts
-- Why the bound (Cormode & Muthukrishnan, 2005):
-  - One row: other items' counts spread over w counters → average extra = N/w
-  - Extra > e × average happens at most 1/e ≈ 37% of the time (else the average would be higher)
-  - Min is too big only if all d rows are bad: (1/e)^d = δ
-  - w = e/ε → e × N/w = εN
-- ε = 0.1%, δ = 1% → 2719 × 5 counters ≈ 54 KB, for any number of distinct items
-- Error is relative to N: great for heavy hitters, poor for rare items
+- Like a counting Bloom filter, but each hash gets its own row
+- Collisions only add → min never undercounts
+- Why the bound:
+  - A row's noise averages N / w
+  - Noise > ~3× average in ≤ 37% of rows
+  - Rows are independent → all bad: 37% × 37% × …
+  - More columns → smaller error; more rows → more confidence
+- 0.1% error, 99% sure → 2719 × 5 counters ≈ 54 KB, any number of items
+- Error is a share of all events: good for frequent items, poor for rare ones
 :::
