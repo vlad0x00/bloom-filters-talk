@@ -97,7 +97,7 @@ RED = "#d64545"
 steps = (
     row(0.72, "insert", '"cat"', BLUE)
     + row(0.48, "query", '"dog"', ORANGE, answer="definitely not")
-    + row(0.24, "query", '"kitty"', ORANGE, answer="possibly yes", note="false positive!")
+    + row(0.24, "query", '"kitty"', RED, answer="possibly yes", note="false positive!")
 )
 
 
