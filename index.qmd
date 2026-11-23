@@ -99,3 +99,31 @@ Summary
   with Bloom filter ran
     <span class="hl">2.27 ± 0.17 times faster</span> than without Bloom filter</pre>
 ```
+
+## Git: faster file history {.git-slide}
+
+:::: {.columns}
+::: {.column width="40%"}
+- Each commit stores a Bloom filter of the **paths it changed**
+- `git log -- <file>` checks each commit's filter first
+  - "definitely not" → skip the tree diff
+  - "maybe" → diff to confirm
+- Off by default: enable once per repo
+- 10 bits per path, 7 hashes → ~0.8% false positives
+:::
+::: {.column width="60%"}
+```{=html}
+<pre class="terminal small-term"><span class="prompt">$</span> git commit-graph write --reachable --changed-paths
+
+<span class="prompt">$</span> git log --oneline -- README.md
+205574e Update README
+f265e8b Add README
+
+<span class="prompt">$</span> GIT_TRACE2_PERF=1 git log --oneline -- README.md 2&gt;&amp;1 \
+    | grep -o 'statistics.*'
+statistics:{"filter_not_present":0,"maybe":5,
+            <span class="hl">"definitely_not":496</span>,<span class="hl">"false_positive":4</span>}</pre>
+<p class="caption-small">502-commit test repo: 496 commits skipped without a diff; 4 false positives (0.8%)</p>
+```
+:::
+::::

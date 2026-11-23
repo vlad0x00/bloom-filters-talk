@@ -77,3 +77,14 @@ $presentation-heading-font-weight: 600;
 }
 .reveal pre.terminal .prompt { color: #7ee787; }
 .reveal pre.terminal .hl { color: #f0a35e; font-weight: bold; }
+.reveal pre.terminal.small-term {
+  font-size: 0.46em;
+}
+.reveal .git-slide ul {
+  font-size: 0.85em;
+}
+.reveal .caption-small {
+  font-size: 0.55em;
+  color: #6e6e73;
+  margin-top: 0;
+}
