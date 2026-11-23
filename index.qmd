@@ -249,8 +249,7 @@ Bits and rank interleaved in memory → **≤ 2 cache misses** per lookup
 
 ::: {.notes}
 - One structure answers "which ID?" instead of one Bloom filter per ID: O(1) vs O(n)
-- Real miBF: 512-bit blocks, rank costs 64/512 = 0.125 bits per bit
-- Spaced seeds instead of hash functions → tolerates a mismatch
+- Spaced seeds: some characters are ignored when hashing → tolerates mismatches
 - ID collisions → saturation bit marks unreliable IDs
 - Chu et al., PNAS 2020 (Birol lab, BCGSC)
 - Locally developed at the Genome Sciences Centre!
