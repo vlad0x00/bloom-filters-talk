@@ -31,3 +31,15 @@ plt.rcParams.update(
         "svg.fonttype": "none",
     }
 )
+
+
+def save_animation(anim, name: str, fps: int) -> None:
+    """Save as WebM (VP9) with an alpha channel, so the slide background shows through."""
+    from matplotlib.animation import FFMpegWriter
+
+    writer = FFMpegWriter(
+        fps=fps,
+        codec="libvpx-vp9",
+        extra_args=["-pix_fmt", "yuva420p", "-b:v", "0", "-crf", "30", "-deadline", "good", "-cpu-used", "4"],
+    )
+    anim.save(OUT / f"{name}.webm", writer=writer, savefig_kwargs={"transparent": True})

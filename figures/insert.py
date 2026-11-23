@@ -3,10 +3,10 @@
 import hashlib
 
 import matplotlib.pyplot as plt
-from matplotlib.animation import FFMpegWriter, FuncAnimation
+from matplotlib.animation import FuncAnimation
 from matplotlib.patches import Rectangle
 
-from style import BLUE, INK, ORANGE, OUT
+from style import save_animation, BLUE, INK, ORANGE, OUT
 
 M, K = 32, 3
 ITEMS = ["cat", "dog", "fish", "bird"]
@@ -75,5 +75,4 @@ def update(frame: int):
 
 
 anim = FuncAnimation(fig, update, frames=len(ITEMS) * FRAMES_PER_ITEM + FPS, interval=1000 / FPS)
-anim.save(OUT / "insert.mp4", writer=FFMpegWriter(fps=FPS, codec="libx264",
-                                                  extra_args=["-pix_fmt", "yuv420p", "-preset", "veryfast"]))
+save_animation(anim, "insert", FPS)

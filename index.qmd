@@ -26,6 +26,10 @@ pagetitle: "Bloom Filters"
 :::
 ::::
 
+## {.no-title .center}
+
+<video data-autoplay muted playsinline src="figures/out/blackbox_insert.webm" style="width: 100%;"></video>
+
 ## False-positive rate vs. memory
 
 ![](figures/out/fp_rate.svg){fig-align="center"}
@@ -36,7 +40,7 @@ Placeholder slide to check the static-figure pipeline.
 
 ## Inserting into a Bloom filter
 
-<video data-autoplay muted playsinline src="figures/out/insert.mp4" style="width: 100%;"></video>
+<video data-autoplay muted playsinline src="figures/out/insert.webm" style="width: 100%;"></video>
 
 ::: {.notes}
 Placeholder slide to check the animation pipeline.
