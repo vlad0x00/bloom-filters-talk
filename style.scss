@@ -14,3 +14,8 @@ $presentation-heading-font-weight: 600;
 .reveal .small {
   font-size: 0.7em;
 }
+
+/* Slides with a title that is kept for the menu and navigation but not shown. */
+.reveal .slides section.hide-title > h2 {
+  display: none;
+}
