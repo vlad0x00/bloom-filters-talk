@@ -306,4 +306,22 @@ Derivation (n elements, m bits, k hashes):
 - List is Claude-generated
 :::
 
+## Multi-index Bloom filter (miBF) {.inside background-color="#1d1d1f"}
+
+::: {.peek}
+{{< include figures/out/mibf_stack.md >}}
+:::
+
+::: {.fp-rate .fragment data-fragment-index="3"}
+Bits and rank interleaved in memory → **≤ 2 cache misses** per lookup
+:::
+
+::: {.notes}
+- One structure answers "which genome?" instead of n Bloom filters: O(1) vs O(n)
+- Real miBF: 512-bit blocks, rank costs 64/512 = 0.125 bits per bit
+- Spaced seeds instead of hash functions → tolerates a mismatch
+- ID collisions → saturation bit marks unreliable IDs
+- Chu et al., PNAS 2020 (Birol lab, BCGSC)
+:::
+
 ## Q&A {.center .section-slide}
