@@ -243,7 +243,7 @@ Derivation (n elements, m bits, k hashes):
 <li>Time-decaying Bloom filter</li>
 <li>Age-partitioned Bloom filter</li>
 <li>Forgetful Bloom filter</li>
-<li>Sliding-window Bloom filter</li>
+<li>Sliding Bloom filter</li>
 <li>Weighted Bloom filter</li>
 <li>Attenuated Bloom filter</li>
 <li>Hierarchical Bloom filter</li>
