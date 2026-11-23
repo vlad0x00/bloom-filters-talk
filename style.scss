@@ -175,3 +175,9 @@ $presentation-heading-font-weight: 600;
   text-align: center;
   margin-top: 10px;
 }
+
+/* Two versions of the comparison in the same spot; the merged one replaces the first. */
+.reveal .vs-stack { display: grid; }
+.reveal .vs-stack > div { grid-area: 1 / 1; }
+.reveal table.vs.merged th,
+.reveal table.vs.merged td { text-align: center; }
