@@ -200,6 +200,10 @@ Derivation (n elements, m bits, k hashes):
 {{< include figures/out/counting_stack.md >}}
 :::
 
+::: {.notes}
+- In reality, genome assembly uses counting Bloom filter
+:::
+
 ## Count-min sketch {.inside background-color="#1d1d1f"}
 
 ::: {.peek}
