@@ -140,3 +140,9 @@ statistics:{"filter_not_present":0,"maybe":9,
 - A false positive lets the assembler step off the real sequence
 - The next k-mers on that branch aren't in the reads either → it dies after a few bases
 - Short dead-end branches are simply ignored
+
+## Inside the Bloom filter {.inside background-color="#1d1d1f"}
+
+::: {.peek}
+{{< include figures/out/inside_stack.md >}}
+:::
