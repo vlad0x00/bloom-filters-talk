@@ -126,4 +126,6 @@ $presentation-heading-font-weight: 600;
   display: block;
   width: 100%;
   max-height: none;
+  margin-left: auto;   /* centre like the unwrapped layers */
+  margin-right: auto;
 }
