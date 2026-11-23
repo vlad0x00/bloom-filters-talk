@@ -42,3 +42,18 @@ pagetitle: "Bloom Filters"
 - Because we hash elements, their size inside the Bloom filter is unrelated to their original size
 - We can't retrieve elements from the filter. We can only test their presence when we have the element
 :::
+
+## Where are Bloom filters used?
+
+```{=html}
+<div class="uses">
+  <img src="figures/out/uses/db.svg">
+  <div><strong>Database query optimization</strong><span>Skip disk reads and join lookups that can't match</span></div>
+  <img src="figures/out/uses/git.svg">
+  <div><strong>Git log</strong><span>Skip commits that didn't touch a file: <code>git log -- README.md</code></span></div>
+  <img src="figures/out/uses/dna.svg">
+  <div><strong>DNA sequence algorithms</strong><span>Store huge sets of k-mers (short DNA substrings) in memory</span></div>
+  <img src="figures/out/uses/url.svg">
+  <div><strong>Malicious URL detection</strong><span>Check URLs locally; ask the server only on a "maybe"</span></div>
+</div>
+```
