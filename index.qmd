@@ -158,8 +158,7 @@ False-positive rate: 1/16 = **6.25%**
 
 ::: {.notes}
 - A possibly huge element reduced to 1 bit. E.g. a 100 bit element achieves 100x mem usage reduction.
-- Bad cache performance: each hash hits a random bit → a cache miss in a big filter. k hashes = k cache misses
-  - Fix: blocked Bloom filter, all k bits in one 64-byte cache line → 1 miss
+- Bad cache locality: k hashes = k cache misses. Fix: blocked Bloom filter (1 cache line)
 :::
 
 ## Multiple hash functions {.inside background-color="#1d1d1f"}
