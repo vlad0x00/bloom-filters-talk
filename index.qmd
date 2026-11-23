@@ -1,8 +1,19 @@
 ---
-title: "Bloom Filters"
-subtitle: "Vancouver Systems 2026-11-24"
-author: "Vladimir Nikolic"
+pagetitle: "Bloom Filters"
 ---
+
+## {.quarto-title-block .center}
+
+<!-- Hand-written title slide (instead of YAML title) so it can have speaker notes. -->
+<h1 class="title">Bloom Filters</h1>
+<p class="subtitle">Vancouver Systems 2026-11-24</p>
+<div class="quarto-title-authors"><div class="quarto-title-author"><div class="quarto-title-author-name">Vladimir Nikolic</div></div></div>
+
+::: {.notes}
+- Worked in scientific computing most of my career (almost a decade)
+- Right now working in bot detection
+- Have used Bloom filters in many projects
+:::
 
 ## What is a Bloom filter? {background-image="figures/static/bloom1970.png" background-size="contain" background-position="right" background-opacity="0.18"}
 
