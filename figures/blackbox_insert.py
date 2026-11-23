@@ -89,15 +89,15 @@ def row(y, verb, word, color, answer=None, note=None):
                               color=INK, fontweight="bold")])
     if note:
         steps.append([ax.text(BOX_R + 0.06, y - 0.06, note, ha="left", va="center", fontsize=17,
-                              color=RED)])
+                              color=PURPLE)])
     return steps
 
 
-RED = "#d64545"
+PURPLE = "#8a3fd1"
 steps = (
     row(0.72, "insert", '"cat"', BLUE)
     + row(0.48, "query", '"dog"', ORANGE, answer="definitely not")
-    + row(0.24, "query", '"kitty"', RED, answer="possibly yes", note="false positive!")
+    + row(0.24, "query", '"kitty"', PURPLE, answer="possibly yes", note="false positive!")
 )
 
 
