@@ -23,9 +23,12 @@ serve: slides
 	@echo "Open http://localhost:8000"
 	cd _site && python3 -m http.server 8000
 
-# Needs Chromium; prints the deck via reveal.js print mode.
+# PDF via decktape, using the system Chrome/Chromium (override with CHROME=/path/to/chrome).
+CHROME ?= $(shell command -v google-chrome-stable || command -v google-chrome || command -v chromium || command -v chromium-browser)
+
 pdf: slides
-	npx --yes decktape reveal --size 1600x900 _site/index.html _site/slides.pdf
+	@test -n "$(CHROME)" || { echo "No Chrome/Chromium found; run: make pdf CHROME=/path/to/chrome"; exit 1; }
+	npx --yes decktape reveal --chrome-path "$(CHROME)" --size 1600x900 _site/index.html _site/slides.pdf
 
 clean:
 	rm -rf _site figures/out .quarto
