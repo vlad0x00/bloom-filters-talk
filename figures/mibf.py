@@ -38,7 +38,7 @@ M, BLOCK = 12, 4
 SEEDS = ["1*1*", "*1*1"]
 KEYS = [("ACGT", 1), ("TTAG", 2), ("ATGG", 3)]
 QUERY_MISMATCH = "ACCT"                                  # "ACGT" with one read error
-HASH = {"A*G*": 9, "*C*T": 2, "T*A*": 6, "*T*G": 11,     # hand-picked hash values
+HASH = {"A*G*": 6, "*C*T": 2, "T*A*": 1, "*T*G": 11,     # hand-picked hash values
         "A*C*": 4}
 MAX_MISS = 1
 
@@ -100,8 +100,8 @@ def query(key):                                          # MIBloomFilter::at(has
     return (hits if misses <= MAX_MISS else None), misses
 
 
-assert SET == [2, 6, 9, 11] and RANK == [0, 1, 2]
-assert PASS2 == [1, 2, 1, 2] and saturated == ["ATGG"]
+assert SET == [1, 2, 6, 11] and RANK == [0, 2, 3]
+assert PASS2 == [2, 1, 1, 2] and saturated == ["ATGG"]
 assert sat == [False, False, True, True]
 assert query(QUERY_MISMATCH) == ([None, (1, False)], 1)
 assert query("ATGG") == ([(1, True), (2, True)], 0)
