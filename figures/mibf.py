@@ -19,6 +19,8 @@ Writes transparent SVG layers into figures/out/mibf/ and an HTML snippet
 (figures/out/mibf_stack.md) for the slide.
 """
 
+import re
+
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch, Rectangle
 
@@ -36,10 +38,11 @@ LAYERS = OUT / "mibf"
 
 M, BLOCK = 12, 4
 SEEDS = ["1*1*", "*1*1"]
-KEYS = [("ACGT", 1), ("TTAG", 2), ("ATGG", 3)]
-QUERY_MISMATCH = "ACCT"                                  # "ACGT" with one read error
-HASH = {"A*G*": 6, "*C*T": 2, "T*A*": 1, "*T*G": 11,     # hand-picked hash values
-        "A*C*": 4}
+KEYS = [("ACGT", 1), ("GTTA", 1), ("AAGC", 2), ("GATC", 3)]
+QUERY_MISMATCH = "GTCA"                                  # "GTTA" with one read error
+HASH = {"A*G*": 1, "*C*T": 3, "*A*C": 6, "G*T*": 9,      # hand-picked hash values
+        "*T*A": 11, "G*C*": 4}
+COIN = {(1, 2)}           # (bit, c): the c-th candidate for that bit wins its 1/c draw
 MAX_MISS = 1
 
 
@@ -70,12 +73,12 @@ N_SLOTS = len(SET)
 ids, counts = [0] * N_SLOTS, [0] * N_SLOTS
 P2_STEPS = []                                            # (ID, key, [(bit, slot, count, wrote)])
 for ref in sorted({i for _, i in KEYS}):                 # pass 2, one reference at a time
-    key = next(k for k, i in KEYS if i == ref)
+    key = [k for k, i in KEYS if i == ref]
     step = []
     for p in sorted({p for k, i in KEYS if i == ref for p in bits_of(k)}):
         s = slot(p)
         counts[s] += 1
-        wrote = counts[s] == 1      # every later candidate here loses its 1/c draw
+        wrote = counts[s] == 1 or (p, counts[s]) in COIN
         if wrote:
             ids[s] = ref
         step.append((p, s, counts[s], wrote))
@@ -104,11 +107,12 @@ def query(key):                                          # MIBloomFilter::at(has
     return (hits if misses <= MAX_MISS else None), misses
 
 
-assert SET == [1, 2, 6, 11] and RANK == [0, 2, 3]
-assert PASS2 == [2, 1, 1, 2] and saturated == ["ATGG"]
-assert sat == [False, False, True, True]
+assert SET == [1, 3, 6, 9, 11] and RANK == [0, 2, 3]
+assert PASS2 == [2, 1, 2, 1, 1] and saturated == ["GATC"]
+assert sat == [False, False, True, True, False]
 assert query(QUERY_MISMATCH) == ([None, (1, False)], 1)
-assert query("ATGG") == ([(1, True), (2, True)], 0)
+assert query("GATC") == ([(1, True), (2, True)], 0)
+SAT_KEY = "GATC"
 
 # --- Drawing -----------------------------------------------------------------------------
 W_IN, H_IN = 16, 7
@@ -231,29 +235,30 @@ P2 = 3                                                   # fragment of the first
 P3 = P2 + len(P2_STEPS)
 
 
-def p2_stage(ref, key, step):
-    slots = ", ".join(str(sl) for _, sl, _, _ in step)
-    if all(w for *_, w in step):
-        return (f"Pass 2, ID {ref} ({key}): slots {slots} are empty → write {ref}",
-                "Each slot counts its candidates · the 1st candidate always takes the slot")
-    return (f"Pass 2, ID {ref} ({key}): slots {slots} are taken → 2nd candidate wins with chance ½",
-            "The c-th candidate wins with probability 1/c (reservoir sampling) · "
-            f"here ID {ref} loses both draws")
+P2_TEXT = [
+    ("Pass 2, ID 1 (ACGT, GTTA): slots 0, 1, 3, 4 are empty → write 1",
+     "Each slot counts its candidates · the 1st candidate always takes the slot"),
+    ("Pass 2, ID 2 (AAGC): slot 0 is taken → ½ draw, won · slot 2 is empty → write 2",
+     "The c-th candidate takes the slot with probability 1/c (reservoir sampling) · "
+     "ACGT still has slot 1"),
+    ("Pass 2, ID 3 (GATC): slots 2, 3 are taken → lost both ½ draws",
+     "1/c keeps it fair: every candidate is equally likely to end up in the slot"),
+]
 
 
 STAGES = [
     ("Spaced seeds: hash each key twice, each time ignoring different letters",
-     "Same hash function, different inputs · ATGG shares A*G* and *T*G with the others "
-     "→ same bits"),
+     "Same hash function, different inputs · shared letters → same bit "
+     "(A*G*, *A*C, G*T*)"),
     ("Pass 1: set the bits of every key", "Exactly a normal Bloom filter"),
     (f"Rank sweep: 1s before each block · {N_SLOTS} set bits → allocate {N_SLOTS} ID slots",
      "A bit's ID slot = its block's rank + 1s before it in the block"),
-    *[p2_stage(ref, key, step) for ref, key, step, _ in P2_STEPS],
-    ("Pass 3: ATGG (ID 3) lost both slots → mark them saturated",
+    *P2_TEXT,
+    ("Pass 3: GATC (ID 3) lost both slots → mark them saturated",
      "S = this slot's ID may be wrong · if one ID held both slots, ID 3 would take one instead"),
-    ("Query ACCT (1 read error): seed 1 misses, seed 2 hits",
+    ("Query GTCA (1 read error): seed 1 misses, seed 2 hits",
      f"Up to {MAX_MISS} seed may miss → the mismatch is tolerated"),
-    ("Query ATGG: every hit is saturated", "The answer is flagged as unreliable"),
+    ("Query GATC: every hit is saturated", "The answer is flagged as unreliable"),
 ]
 for k, (title, note) in enumerate(STAGES):
     layers.append((f"stage{k}", stage(title, note), k, k + 1 if k + 1 < len(STAGES) else None))
@@ -294,17 +299,18 @@ layers.append(("alloc", alloc, 2, None))
 COIN_Y = CAND_Y - 0.065
 for n, (ref, key, step, cnt) in enumerate(P2_STEPS):
     f = P2 + n
-    r = [k for k, _ in KEYS].index(key)
-    hl, writes = [row_box(ROW_Y[r])], []
+    hl = [row_box(ROW_Y[[k for k, _ in KEYS].index(kk)]) for kk in key]
+    writes = []
     for p, sl, c, wrote in step:
         hl += [outline(X0 + p * CELL, BIT_Y, CELL, BIT_H),
                arrow(bit_x(p), BIT_Y - 0.035, slot_x(sl), ID_Y + ID_H + 0.035),
                outline(ID_X0 + sl * ID_CELL, ID_Y, ID_CELL, ID_H)]
         if wrote:
             writes += id_cell(sl, ref)
-        else:
-            hl.append(text(slot_x(sl), COIN_Y, f"{ref} lost\n(½ draw)", fontsize=12, color=RED,
-                           fontweight="bold", linespacing=1.1))
+        if c > 1:
+            hl.append(text(slot_x(sl), COIN_Y, f"{ref} {'won' if wrote else 'lost'}\n(½ draw)",
+                           fontsize=12, color=INK if wrote else RED, fontweight="bold",
+                           linespacing=1.1))
     counts_row = [text(ID_X0 - 0.012, CAND_Y, "count", ha="right", fontsize=13, color=GREY)]
     for j, c in enumerate(cnt):
         changed = any(sl == j for _, sl, _, _ in step)
@@ -316,9 +322,9 @@ for n, (ref, key, step, cnt) in enumerate(P2_STEPS):
     layers.append((f"pass2_{ref}_hl", hl, f, f + 1))
     layers.append((f"pass2_{ref}_count", counts_row, f, f + 1 if n + 1 < len(P2_STEPS) else P3))
 
-# Click 5: pass 3, ATGG saturates
-atgg = [slot(p) for p in bits_of("ATGG")]
-layers.append(("pass3_hl", [row_box(ROW_Y[2])] +
+# Pass 3: the key that lost all its slots saturates
+atgg = [slot(p) for p in bits_of(SAT_KEY)]
+layers.append(("pass3_hl", [row_box(ROW_Y[[k for k, _ in KEYS].index(SAT_KEY)])] +
                [outline(ID_X0 + s * ID_CELL, ID_Y, ID_CELL, ID_H) for s in atgg], P3, P3 + 1))
 pass3 = []
 for s in atgg:
@@ -341,14 +347,14 @@ def query_layer(key, result, color, mismatch=None):
         arts += [outline(X0 + p * CELL, BIT_Y, CELL, BIT_H),
                  arrow(bit_x(p), BIT_Y - 0.035, slot_x(s), ID_Y + ID_H + 0.035),
                  outline(ID_X0 + s * ID_CELL, ID_Y, ID_CELL, ID_H)]
-    arts.append(text(ID_X0 + N_SLOTS * ID_CELL + 0.025, ID_Y + ID_H / 2, result, ha="left",
-                     fontsize=20, color=color, fontweight="bold", linespacing=1.15))
+    arts.append(text(ID_X0 + N_SLOTS * ID_CELL / 2, CAND_Y, result, fontsize=20, color=color,
+                     fontweight="bold"))      # below the IDs: the slot array is too wide for the right
     return arts
 
 
 layers.append(("query_mismatch",
                query_layer(QUERY_MISMATCH, "→ ID 1", BLUE, mismatch=2), P3 + 1, P3 + 2))
-layers.append(("query_sat", query_layer("ATGG", "→ saturated:\n    unreliable", RED), P3 + 2, None))
+layers.append(("query_sat", query_layer(SAT_KEY, "→ saturated: unreliable", RED), P3 + 2, None))
 
 # --- Save layers ---------------------------------------------------------------------------
 everything = static + [a for _, arts, _, _ in layers for a in arts]
@@ -357,11 +363,17 @@ for old in LAYERS.glob("*.svg"):
     old.unlink()
 
 
+SIZES = {}
+
+
 def save(name, arts):
     keep = set(map(id, arts))
     for a in everything:
         a.set_visible(id(a) in keep)
     fig.savefig(LAYERS / f"{name}.svg", transparent=True, bbox_inches=None)
+    size = re.search(r'width="[^"]+" height="[^"]+"', (LAYERS / f"{name}.svg").read_text()[:600])[0]
+    assert SIZES.setdefault("base", size) == size, name   # tight bbox: content past the edge would
+                                                          # resize this layer and misalign the stack
     return f"figures/out/mibf/{name}.svg"
 
 
