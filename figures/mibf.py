@@ -68,14 +68,18 @@ def slot(p):
 assert [slot(p) for p in SET] == list(range(len(SET)))
 N_SLOTS = len(SET)
 ids, counts = [0] * N_SLOTS, [0] * N_SLOTS
-cands = [[] for _ in range(N_SLOTS)]                     # candidate IDs per slot, arrival order
+P2_STEPS = []                                            # (ID, key, [(bit, slot, count, wrote)])
 for ref in sorted({i for _, i in KEYS}):                 # pass 2, one reference at a time
+    key = next(k for k, i in KEYS if i == ref)
+    step = []
     for p in sorted({p for k, i in KEYS if i == ref for p in bits_of(k)}):
         s = slot(p)
         counts[s] += 1
-        if counts[s] == 1:          # every later candidate here loses its 1/c draw
+        wrote = counts[s] == 1      # every later candidate here loses its 1/c draw
+        if wrote:
             ids[s] = ref
-        cands[s].append(ref)
+        step.append((p, s, counts[s], wrote))
+    P2_STEPS.append((ref, key, step, list(counts)))
 PASS2 = list(ids)
 sat = [False] * N_SLOTS
 saturated = []
@@ -223,6 +227,20 @@ static.append(text(X0 + M * CELL / 2, BIT_Y + BIT_H + 0.03, "bits", fontsize=15,
 # (name, artists, fragment it appears at or None = from the start, fragment it hides at or None)
 layers = [("stage_base", stage("Insert DNA keys, each with an ID",
                                "Like a normal Bloom filter, plus a value per key"), None, 0)]
+P2 = 3                                                   # fragment of the first pass-2 step
+P3 = P2 + len(P2_STEPS)
+
+
+def p2_stage(ref, key, step):
+    slots = ", ".join(str(sl) for _, sl, _, _ in step)
+    if all(w for *_, w in step):
+        return (f"Pass 2, ID {ref} ({key}): slots {slots} are empty → write {ref}",
+                "Each slot counts its candidates · the 1st candidate always takes the slot")
+    return (f"Pass 2, ID {ref} ({key}): slots {slots} are taken → 2nd candidate wins with chance ½",
+            "The c-th candidate wins with probability 1/c (reservoir sampling) · "
+            f"here ID {ref} loses both draws")
+
+
 STAGES = [
     ("Spaced seeds: hash each key twice, each time ignoring different letters",
      "Same hash function, different inputs · ATGG shares A*G* and *T*G with the others "
@@ -230,9 +248,7 @@ STAGES = [
     ("Pass 1: set the bits of every key", "Exactly a normal Bloom filter"),
     (f"Rank sweep: 1s before each block · {N_SLOTS} set bits → allocate {N_SLOTS} ID slots",
      "A bit's ID slot = its block's rank + 1s before it in the block"),
-    ("Pass 2: write the IDs, one ID at a time",
-     "A slot's c-th candidate takes it with probability 1/c (reservoir sampling) · "
-     "here ID 3 loses both draws"),
+    *[p2_stage(ref, key, step) for ref, key, step, _ in P2_STEPS],
     ("Pass 3: ATGG (ID 3) lost both slots → mark them saturated",
      "S = this slot's ID may be wrong · if one ID held both slots, ID 3 would take one instead"),
     ("Query ACCT (1 read error): seed 1 misses, seed 2 hits",
@@ -274,29 +290,40 @@ for j in range(N_SLOTS):
               text(slot_x(j), ID_Y + ID_H + 0.02, f"bit {SET[j]}", fontsize=10, color=GREY)]
 layers.append(("alloc", alloc, 2, None))
 
-# Click 4: pass 2 writes IDs; candidates under each slot, winner in colour
-pass2 = []
-cand = [text(ID_X0 - 0.012, CAND_Y, "candidates", ha="right", fontsize=13, color=GREY)]
-for j in range(N_SLOTS):
-    pass2 += id_cell(j, PASS2[j])
-    n = len(cands[j])
-    for c, ref in enumerate(cands[j]):
-        x = slot_x(j) + (c - (n - 1) / 2) * 0.022
-        win = ref == PASS2[j]
-        cand.append(text(x, CAND_Y, str(ref), fontsize=16, family=MONO,
-                          color=ID_COLOR[ref] if win else "#c7c7cc",
-                          fontweight="bold" if win else "normal"))
-layers.append(("pass2", pass2, 3, None))
-layers.append(("candidates", cand, 3, 4))     # only meaningful during pass 2
+# Pass 2, one click per ID: arrows bit -> slot, write or lose the draw, counts update
+COIN_Y = CAND_Y - 0.065
+for n, (ref, key, step, cnt) in enumerate(P2_STEPS):
+    f = P2 + n
+    r = [k for k, _ in KEYS].index(key)
+    hl, writes = [row_box(ROW_Y[r])], []
+    for p, sl, c, wrote in step:
+        hl += [outline(X0 + p * CELL, BIT_Y, CELL, BIT_H),
+               arrow(bit_x(p), BIT_Y - 0.035, slot_x(sl), ID_Y + ID_H + 0.035),
+               outline(ID_X0 + sl * ID_CELL, ID_Y, ID_CELL, ID_H)]
+        if wrote:
+            writes += id_cell(sl, ref)
+        else:
+            hl.append(text(slot_x(sl), COIN_Y, f"{ref} lost\n(½ draw)", fontsize=12, color=RED,
+                           fontweight="bold", linespacing=1.1))
+    counts_row = [text(ID_X0 - 0.012, CAND_Y, "count", ha="right", fontsize=13, color=GREY)]
+    for j, c in enumerate(cnt):
+        changed = any(sl == j for _, sl, _, _ in step)
+        counts_row.append(text(slot_x(j), CAND_Y, str(c), fontsize=17, family=MONO,
+                               color=PURPLE if changed else GREY,
+                               fontweight="bold" if changed else "normal"))
+    if writes:                                # below the highlight, so outlines stay whole
+        layers.append((f"pass2_{ref}", writes, f, None))
+    layers.append((f"pass2_{ref}_hl", hl, f, f + 1))
+    layers.append((f"pass2_{ref}_count", counts_row, f, f + 1 if n + 1 < len(P2_STEPS) else P3))
 
 # Click 5: pass 3, ATGG saturates
 atgg = [slot(p) for p in bits_of("ATGG")]
 layers.append(("pass3_hl", [row_box(ROW_Y[2])] +
-               [outline(ID_X0 + s * ID_CELL, ID_Y, ID_CELL, ID_H) for s in atgg], 4, 5))
+               [outline(ID_X0 + s * ID_CELL, ID_Y, ID_CELL, ID_H) for s in atgg], P3, P3 + 1))
 pass3 = []
 for s in atgg:
     pass3 += id_cell(s, ids[s], saturated=True)
-layers.append(("pass3", pass3, 4, None))
+layers.append(("pass3", pass3, P3, None))
 
 
 def query_layer(key, result, color, mismatch=None):
@@ -320,8 +347,8 @@ def query_layer(key, result, color, mismatch=None):
 
 
 layers.append(("query_mismatch",
-               query_layer(QUERY_MISMATCH, "→ ID 1", BLUE, mismatch=2), 5, 6))
-layers.append(("query_sat", query_layer("ATGG", "→ saturated:\n    unreliable", RED), 6, None))
+               query_layer(QUERY_MISMATCH, "→ ID 1", BLUE, mismatch=2), P3 + 1, P3 + 2))
+layers.append(("query_sat", query_layer("ATGG", "→ saturated:\n    unreliable", RED), P3 + 2, None))
 
 # --- Save layers ---------------------------------------------------------------------------
 everything = static + [a for _, arts, _, _ in layers for a in arts]
