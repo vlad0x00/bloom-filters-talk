@@ -244,7 +244,7 @@ Derivation (n elements, m bits, k hashes):
 {{< include figures/out/mibf_stack.md >}}
 :::
 
-::: {.fp-rate .fragment data-fragment-index="3"}
+::: {.fp-rate .fragment data-fragment-index="7"}
 Bits and rank interleaved in memory → **≤ 2 cache misses** per lookup
 :::
 
@@ -252,6 +252,7 @@ Bits and rank interleaved in memory → **≤ 2 cache misses** per lookup
 - One structure answers "which ID?" instead of one Bloom filter per ID: O(1) vs O(n)
 - Spaced seeds: same hash function, but each hash ignores different characters → k different hashes, tolerates mismatches
 - ID collisions → saturation bit marks unreliable IDs
+- Real query: a read = many keys; each key's IDs vote, most votes wins
 - Chu et al., PNAS 2020 (Birol lab, BCGSC)
 - Locally developed at the Genome Sciences Centre!
 :::
