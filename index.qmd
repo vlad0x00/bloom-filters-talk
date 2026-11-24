@@ -245,7 +245,7 @@ Derivation (n elements, m bits, k hashes):
 :::
 
 ::: {.fp-rate .fragment data-fragment-index="10"}
-Bits and rank interleaved in memory → **≤ 2 cache misses** per lookup
+Ranks and bits are interleaved in memory for **better cache efficiency**
 :::
 
 ::: {.notes}
