@@ -19,6 +19,7 @@ Writes transparent SVG layers into figures/out/mibf/ and an HTML snippet
 (figures/out/mibf_stack.md) for the slide.
 """
 
+import hashlib
 import re
 
 import matplotlib.pyplot as plt
@@ -381,7 +382,8 @@ def save(name, arts):
     size = re.search(r'width="[^"]+" height="[^"]+"', (LAYERS / f"{name}.svg").read_text()[:600])[0]
     assert SIZES.setdefault("base", size) == size, name   # tight bbox: content past the edge would
                                                           # resize this layer and misalign the stack
-    return f"figures/out/mibf/{name}.svg"
+    digest = hashlib.md5((LAYERS / f"{name}.svg").read_bytes()).hexdigest()[:8]
+    return f"figures/out/mibf/{name}.svg?v={digest}"   # cache-bust: names repeat across builds
 
 
 imgs = [f'<img src="{save("base", static)}">']
