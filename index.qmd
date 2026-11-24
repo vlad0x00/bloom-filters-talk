@@ -29,7 +29,8 @@ pagetitle: "Bloom Filters"
 ::::
 
 ::: {.notes}
-- How many people know or have used Bloom filter(s)?
+- How many people have used Bloom filters?
+- How many people know how Bloom filters work?
 - Paper: memory too small → accept some false "yes" to shrink the hash table
   - Example: hyphenation, 10% of words need disk
   - 2M bits → <300k bits, 84% fewer disk reads
