@@ -35,16 +35,16 @@ ID_COLOR = {1: BLUE, 2: ORANGE, 3: GREEN}
 LAYERS = OUT / "mibf"
 
 M, BLOCK = 12, 4
-SEEDS = ["1·1·", "·1·1"]
+SEEDS = ["1*1*", "*1*1"]
 KEYS = [("ACGT", 1), ("TTAG", 2), ("ATGG", 3)]
 QUERY_MISMATCH = "ACCT"                                  # "ACGT" with one read error
-HASH = {"A·G·": 9, "·C·T": 2, "T·A·": 6, "·T·G": 11,     # hand-picked hash values
-        "A·C·": 4}
+HASH = {"A*G*": 9, "*C*T": 2, "T*A*": 6, "*T*G": 11,     # hand-picked hash values
+        "A*C*": 4}
 MAX_MISS = 1
 
 
 def masked(key, seed):
-    return "".join(c if s == "1" else "·" for c, s in zip(key, seed))
+    return "".join(c if s == "1" else "*" for c, s in zip(key, seed))
 
 
 def bits_of(key):
@@ -194,7 +194,7 @@ def seed_cells(key, y, marks=None, mismatch=None):
     arts = []
     for s, seed in enumerate(SEEDS):
         m = masked(key, seed)
-        bad = {mismatch: RED} if mismatch is not None and m[mismatch] != "·" else {}
+        bad = {mismatch: RED} if mismatch is not None and m[mismatch] != "*" else {}
         arts += mono(COL_S[s], y, m, colors=bad)
         tail = f"→ {HASH[m]}"
         if marks:
@@ -225,7 +225,7 @@ layers = [("stage_base", stage("Insert DNA keys, each with an ID",
                                "Like a normal Bloom filter, plus a value per key"), None, 0)]
 STAGES = [
     ("Spaced seeds: hash each key twice, each time ignoring different letters",
-     "Same hash function, different inputs · ATGG shares A·G· and ·T·G with the others "
+     "Same hash function, different inputs · ATGG shares A*G* and *T*G with the others "
      "→ same bits"),
     ("Pass 1: set the bits of every key", "Exactly a normal Bloom filter"),
     (f"Rank sweep: 1s before each block · {N_SLOTS} set bits → allocate {N_SLOTS} ID slots",
