@@ -71,18 +71,20 @@ def slot(p):
 assert [slot(p) for p in SET] == list(range(len(SET)))
 N_SLOTS = len(SET)
 ids, counts = [0] * N_SLOTS, [0] * N_SLOTS
-P2_STEPS = []                                            # (ID, key, [(bit, slot, count, wrote)])
-for ref in sorted({i for _, i in KEYS}):                 # pass 2, one reference at a time
-    key = [k for k, i in KEYS if i == ref]
-    step = []
-    for p in sorted({p for k, i in KEYS if i == ref for p in bits_of(k)}):
-        s = slot(p)
-        counts[s] += 1
-        wrote = counts[s] == 1 or (p, counts[s]) in COIN
-        if wrote:
-            ids[s] = ref
-        step.append((p, s, counts[s], wrote))
-    P2_STEPS.append((ref, key, step, list(counts)))
+P2_STEPS = []                                     # one per key: (ID, key, [(bit, slot, count, wrote)])
+for ref in sorted({i for _, i in KEYS}):          # pass 2, one reference at a time
+    seen = set()                                  # the library dedups a reference's positions
+    for key in [k for k, i in KEYS if i == ref]:
+        step = []
+        for p in sorted(set(bits_of(key)) - seen):
+            seen.add(p)
+            s = slot(p)
+            counts[s] += 1
+            wrote = counts[s] == 1 or (p, counts[s]) in COIN
+            if wrote:
+                ids[s] = ref
+            step.append((p, s, counts[s], wrote))
+        P2_STEPS.append((ref, key, step, list(counts)))
 PASS2 = list(ids)
 sat = [False] * N_SLOTS
 saturated = []
@@ -108,6 +110,7 @@ def query(key):                                          # MIBloomFilter::at(has
 
 
 assert SET == [1, 3, 6, 9, 11] and RANK == [0, 2, 3]
+assert len(P2_STEPS) == 4
 assert PASS2 == [2, 1, 2, 1, 1] and saturated == ["GATC"]
 assert sat == [False, False, True, True, False]
 assert query(QUERY_MISMATCH) == ([None, (1, False)], 1)
@@ -236,8 +239,10 @@ P3 = P2 + len(P2_STEPS)
 
 
 P2_TEXT = [
-    ("Pass 2, ID 1 (ACGT, GTTA): slots 0, 1, 3, 4 are empty → write 1",
+    ("Pass 2, ID 1 (ACGT): slots 0, 1 are empty → write 1",
      "Each slot counts its candidates · the 1st candidate always takes the slot"),
+    ("Pass 2, ID 1 (GTTA): slots 3, 4 are empty → write 1",
+     "Same ID, next key"),
     ("Pass 2, ID 2 (AAGC): slot 0 is taken → ½ draw, won · slot 2 is empty → write 2",
      "The c-th candidate takes the slot with probability 1/c (reservoir sampling) · "
      "ACGT still has slot 1"),
@@ -245,6 +250,8 @@ P2_TEXT = [
      "1/c keeps it fair: every candidate is equally likely to end up in the slot"),
 ]
 
+
+assert len(P2_TEXT) == len(P2_STEPS)
 
 STAGES = [
     ("Spaced seeds: hash each key twice, each time ignoring different letters",
@@ -299,7 +306,7 @@ layers.append(("alloc", alloc, 2, None))
 COIN_Y = CAND_Y - 0.065
 for n, (ref, key, step, cnt) in enumerate(P2_STEPS):
     f = P2 + n
-    hl = [row_box(ROW_Y[[k for k, _ in KEYS].index(kk)]) for kk in key]
+    hl = [row_box(ROW_Y[[k for k, _ in KEYS].index(key)])]
     writes = []
     for p, sl, c, wrote in step:
         hl += [outline(X0 + p * CELL, BIT_Y, CELL, BIT_H),
@@ -318,9 +325,9 @@ for n, (ref, key, step, cnt) in enumerate(P2_STEPS):
                                color=PURPLE if changed else GREY,
                                fontweight="bold" if changed else "normal"))
     if writes:                                # below the highlight, so outlines stay whole
-        layers.append((f"pass2_{ref}", writes, f, None))
-    layers.append((f"pass2_{ref}_hl", hl, f, f + 1))
-    layers.append((f"pass2_{ref}_count", counts_row, f, f + 1 if n + 1 < len(P2_STEPS) else P3))
+        layers.append((f"pass2_{n}", writes, f, None))
+    layers.append((f"pass2_{n}_hl", hl, f, f + 1))
+    layers.append((f"pass2_{n}_count", counts_row, f, f + 1 if n + 1 < len(P2_STEPS) else P3))
 
 # Pass 3: the key that lost all its slots saturates
 atgg = [slot(p) for p in bits_of(SAT_KEY)]

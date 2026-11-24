@@ -244,7 +244,7 @@ Derivation (n elements, m bits, k hashes):
 {{< include figures/out/mibf_stack.md >}}
 :::
 
-::: {.fp-rate .fragment data-fragment-index="9"}
+::: {.fp-rate .fragment data-fragment-index="10"}
 Bits and rank interleaved in memory → **≤ 2 cache misses** per lookup
 :::
 
