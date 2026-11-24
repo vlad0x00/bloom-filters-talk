@@ -253,6 +253,8 @@ Bits and rank interleaved in memory → **≤ 2 cache misses** per lookup
 - Spaced seeds: same hash function, but each hash ignores different characters → k different hashes, tolerates mismatches
 - ID collisions → saturation bit marks unreliable IDs
 - Real query: a read = many keys; each key's IDs vote, most votes wins
+- Use: microbiome sample → index all bacterial/viral genomes (ID = species) → which species is each read from?
+- Use: pull reads of 580 cancer genes out of a run, assemble only those. vs BWA-MEM: 0.4% vs 3.8% FPs, ≥2× faster, 20 MB RAM
 - Chu et al., PNAS 2020 (Birol lab, BCGSC)
 - Locally developed at the Genome Sciences Centre!
 :::
