@@ -2,6 +2,10 @@
 
 Slides for a ~30-minute talk on Bloom filters and their variants at [Vancouver Systems](https://vancouver.systems).
 
+**View the slides:** <https://vlad0x00.github.io/bloom-filters-talk/> (press `S` for speaker notes).
+
+Every push to `main` rebuilds and deploys the deck to GitHub Pages (`.github/workflows/pages.yml`).
+
 ## Stack
 
 - **Slides:** [Quarto](https://quarto.org) → reveal.js (HTML). Quarto is a project dev dependency (`quarto-cli` in `pyproject.toml`), run via `uv run quarto`. Content lives in `index.qmd` (Markdown, KaTeX math, speaker notes).
